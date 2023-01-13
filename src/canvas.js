@@ -8,6 +8,9 @@ document.addEventListener("DOMContentLoaded", function () {
   const tHeight = 40;
   const rows = 15;
   const cols = 20;
+  
+
+
   let actions = [];
   const char_up_right = new Image(40,40);
   char_up_right.src = "./images/char_up_right.png"
@@ -105,6 +108,7 @@ document.addEventListener("DOMContentLoaded", function () {
     action();
     printmap();
     printchar();
+    printblock();
     window.requestAnimationFrame(updateAll);
   };
 
@@ -166,6 +170,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
     }
+  }
+
+  const printblock = () => {
+    let cur_x = Math.floor((xpos+20)/40)
+    let cur_y = Math.floor((ypos+20)/40)
+    ctx.fillStyle = 'rgba(225,225,225,0.2)';
+    ctx.fillRect(tWidth * cur_x, tHeight * cur_y, 40,40);
   }
 
   const printchar = () => {
