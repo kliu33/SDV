@@ -42,22 +42,22 @@ document.addEventListener("DOMContentLoaded", function () {
     let xpos = 10;
     let ypos = 10;
     function add_action(e) {
-      if (e.keyCode == 39) {
+      if (e.keyCode == 68) {
         if (!actions.includes("right")){
           actions.push("right")
         }
       }
-      if (e.keyCode == 37) {
+      if (e.keyCode == 65) {
         if (!actions.includes("left")){
           actions.push("left")
         }
       }
-      if (e.keyCode == 38) {
+      if (e.keyCode == 87) {
         if (!actions.includes("up")){
           actions.push("up")
         }
       }
-      if (e.keyCode == 40) {
+      if (e.keyCode == 83) {
         if (!actions.includes("down")){
           actions.push("down")
         }
@@ -65,16 +65,16 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function remove_action(e) {
-      if (e.keyCode == 39) {
+      if (e.keyCode == 68) {
         actions.splice(actions.indexOf("right"))
       }
-      if (e.keyCode == 37) {
+      if (e.keyCode == 65) {
         actions.splice(actions.indexOf("left"))
       }
-      if (e.keyCode == 38) {
+      if (e.keyCode == 87) {
         actions.splice(actions.indexOf("up"))
       }
-      if (e.keyCode == 40) {
+      if (e.keyCode == 83) {
         actions.splice(actions.indexOf("down"))
       }
     }
