@@ -1,0 +1,28 @@
+.container {
+    display: flex;
+    justify-content: center;
+    
+  }
+
+.sides {
+    font-family:Georgia, 'Times New Roman', Times, serif ;
+    padding: 20px;
+    border: 3px solid green;
+    height: auto;
+}
+
+#title {
+    font-size: 70px;
+    margin: auto;
+    text-align: center;
+}
+
+#game {
+    margin: 100px;
+    
+}
+
+body {
+    /* background-image: url("../../images/backdrop.jpg"); */
+   background-color:#ccffcc;
+}

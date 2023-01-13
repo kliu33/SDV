@@ -6,16 +6,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script type="application/javascript" src="./dist/main.js" defer></script>
     <script src="./src/canvas.js"></script>
+    <link rel="stylesheet" href="./src/styles/style.css">
     <!-- <script src="./src/top_canvas.js"></script> -->
     <script src="./src/scripts/move.js"></script>
     <title>SDV</title>
 </head>
 <body>
-        <canvas id="game-canvas"></canvas>
-        <!-- <canvas id="top-canvas"></canvas> -->
-        <div>
-            <ul> Controls</ul>
-            <li> Use WASD to move</li>
+    <div id = "title"> Name here</div>
+    <div class="container">
+        <div class="sides">
+            <h1>Controls here</h1>
         </div>
+        <div id="game">
+            <canvas id="game-canvas"></canvas>
+        </div>
+        <div class="sides">
+            <h1>Stuff here</h1>
+        </div>
+        
+        <!-- <canvas id="top-canvas"></canvas> -->
+        
+    </div>
 </body>
 </html>
