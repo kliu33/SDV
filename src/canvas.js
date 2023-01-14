@@ -1,13 +1,12 @@
 
 document.addEventListener("DOMContentLoaded", function () {
   const canvas = document.getElementById("game-canvas");
-  canvas.width = 800;
-  canvas.height = 600;
   const ctx = canvas.getContext("2d");
-  const tWidth = 40;
-  const tHeight = 40;
-  const rows = 20;
-  const cols = 15;
+  const tWidth = 60;
+  const tHeight = 60;
+  const rows = 10;
+  const cols = 10;
+  const walkable = [0]
   
 
 
@@ -20,6 +19,14 @@ document.addEventListener("DOMContentLoaded", function () {
   char_down_left.src = "./images/char_down_left.png"
   const char_down_right = new Image(tWidth,tWidth);
   char_down_right.src = "./images/char_down_right.png"
+  const pond_down_right = new Image(tWidth,tWidth);
+  pond_down_right.src = "./images/pond_down_right.png"
+  const pond_down_left = new Image(tWidth,tWidth);
+  pond_down_left.src = "./images/pond_down_left.png"
+  const pond_up_left = new Image(tWidth,tWidth);
+  pond_up_left.src = "./images/pond_up_left.png"
+  const pond_up_right = new Image(tWidth,tWidth);
+  pond_up_right.src = "./images/pond_up_right.png"
 
   const char_left = new Image(tWidth,tWidth);
   char_left.src = "./images/char_left.png"
@@ -82,33 +89,44 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
+
+
+  const floor = [
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0
+  ]
+
   const map = [
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-    
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,1,0,0,0,0,
+    0,0,0,0,0,1,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0,
+    0,0,0,0,0,0,0,0,0,0
   ];
 
   const updateAll = () => {
     document.onkeydown = add_action;
     document.onkeyup = remove_action;
-    action();
-    printmap();
+    move();
+    printlayer1();
+    printlayer2();
     printchar();
-    printblock();
+    printbar()
+    // printblock();
+    printnextblock();
     window.requestAnimationFrame(updateAll);
   };
 
@@ -116,20 +134,26 @@ document.addEventListener("DOMContentLoaded", function () {
     window.requestAnimationFrame(updateAll);
   };
 
-  const action = () => {
+  const move = () => {
+    let nextblock = blockcheck(nextpix()[0], nextpix()[1])
+    let next_block_idx = nextblock[1] * cols + nextblock[0];
     if (actions.includes("right")) {
+      if (walkable.includes(map[next_block_idx]))
       xpos+=1;
       facing = "right";
     }
     if (actions.includes("left")) {
+      if (walkable.includes(map[next_block_idx]))
       xpos-=1;
       facing = "left"
     }
     if (actions.includes("up")) {
+      if (walkable.includes(map[next_block_idx]))
       ypos-=1;
       facing = "up"
     }
     if (actions.includes("down")) {
+      if (walkable.includes(map[next_block_idx]))
       ypos+=1;
       facing = "down"
     }
@@ -147,8 +171,19 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
-  const printmap = () => {
+  const printlayer1 = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    for (let i = 0; i < rows; i++) {
+      for (let j = 0; j < cols; j++) {
+        let idx = i * cols + j;
+        if(floor[idx] === 0) {
+          ctx.drawImage(grass, tWidth * j, tHeight * i, tWidth, tWidth);
+      }
+    }
+  }
+}
+
+  const printlayer2 = () => {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         let idx = i * cols + j;
@@ -160,23 +195,115 @@ document.addEventListener("DOMContentLoaded", function () {
           ctx.drawImage(water, tWidth * j, tHeight * i, tWidth, tWidth);
         } else if (map[idx] === 3) {
           ctx.drawImage(brick, tWidth * j, tHeight * i, tWidth, tWidth);
-        } else if (map[idx] === 4) {
-          ctx.fillStyle = "black"
-          ctx.fillRect(tWidth * j, tHeight * i, tWidth, tHeight)
-        } else if (map[idx] === 5) {
+        }  else if (map[idx] === 5) {
           ctx.drawImage(grass_water, tWidth * j, tHeight * i, tWidth, tWidth);
         } else if (map[idx] === 6) {
           ctx.drawImage(wood, tWidth * j, tHeight * i, tWidth, tWidth);
+        }else if (map[idx] === 11) {
+          ctx.drawImage(pond_up_left, tWidth * j, tHeight * i, tWidth, tWidth);
+        }else if (map[idx] === 12) {
+          ctx.drawImage(pond_up_right, tWidth * j, tHeight * i, tWidth, tWidth);
+        }else if (map[idx] === 13) {
+          ctx.drawImage(pond_down_right, tWidth * j, tHeight * i, tWidth, tWidth);
+        }else if (map[idx] === 14) {
+          ctx.drawImage(pond_down_left, tWidth * j, tHeight * i, tWidth, tWidth);
         }
       }
     }
   }
 
-  const printblock = () => {
-    let cur_x = Math.floor((xpos+(tWidth/2))/tWidth)
-    let cur_y = Math.floor((ypos+(tWidth/2))/tWidth)
-    ctx.fillStyle = 'rgba(225,225,225,0.2)';
-    ctx.fillRect(tWidth * cur_x, tHeight * cur_y, tWidth,tWidth);
+  const printbar = () => {
+    ctx.fillStyle = "black"
+    ctx.fillRect(0, 600, tWidth, tWidth)
+  }
+
+  // const currblock = () => {
+  //   let cur_x = Math.floor((xpos+(tWidth/2))/tWidth)
+  //   let cur_y = Math.floor((ypos+(tWidth/2))/tWidth)
+  //   return [cur_x, cur_y]
+  // }
+
+  const nextpix = () => {
+    let next_x = xpos
+    let next_y = ypos
+    switch(facing) {
+      case "left":
+        next_x -= 1;
+        break;
+      case "right":
+        next_x += 1;
+        break;
+      case "down":
+        next_y += 1;
+        break;
+      case "up":
+        next_y -= 1;
+        break;
+      case "up_left":
+        next_x -= 1;
+        next_y -= 1;
+        break;
+      case "up_right":
+        next_x += 1;
+        next_y -= 1;
+        break;
+      case "down_left":
+        next_x -= 1;
+        next_y += 1;
+        break;
+      case "down_right":
+        next_x += 1;
+        next_y += 1;
+    }
+    return [next_x, next_y]
+  }
+
+  function blockcheck(x,y) {
+    let block_x = Math.floor((x+(tWidth/2))/tWidth)
+    let block_y = Math.floor((y+(tWidth/2))/tWidth)
+    return [block_x, block_y]
+  }
+
+  function nextblockcheck(x,y) {
+    let block_x = Math.floor((x+(tWidth/2))/tWidth)
+    let block_y = Math.floor((y+(tWidth/2))/tWidth)
+    switch(facing) {
+      case "left":
+        block_x -= 1;
+        break;
+      case "right":
+        block_x += 1;
+        break;
+      case "down":
+        block_y += 1;
+        break;
+      case "up":
+        block_y -= 1;
+        break;
+      case "up_left":
+        block_x -= 1;
+        block_y -= 1;
+        break;
+      case "up_right":
+        block_x += 1;
+        block_y -= 1;
+        break;
+      case "down_left":
+        block_x -= 1;
+        block_y += 1;
+        break;
+      case "down_right":
+        block_x += 1;
+        block_y += 1;
+    }
+    return [block_x, block_y]
+  }
+
+  const printnextblock = () => {
+    let next_block = nextblockcheck(xpos,ypos);
+    ctx.globalAlpha = 0.5;
+    ctx.drawImage(rock, tWidth * next_block[0], tWidth* next_block[1], tWidth, tWidth);
+    ctx.globalAlpha = 1.0;
   }
 
   const printchar = () => {
@@ -204,7 +331,6 @@ document.addEventListener("DOMContentLoaded", function () {
         break;
       case "down_right":
         ctx.drawImage(char_down_right, xpos, ypos, tWidth, tWidth);
-        break;
     }
   }
 
