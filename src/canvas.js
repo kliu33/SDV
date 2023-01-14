@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const tHeight = 60;
   const rows = 10;
   const cols = 10;
-  const walkable = [0]
+  const walkable = [0];
+  const holding = ["rock","","","",""];
   
 
 
@@ -44,13 +45,47 @@ document.addEventListener("DOMContentLoaded", function () {
   brick.src = "./images/brick.jpg"
   const grass = new Image(tWidth,tWidth);
   grass.src = "./images/grass.png"
-  const rock = new Image(tWidth,tWidth);
+  const soil = new Image(tWidth,tWidth);
+  soil.src = "./images/soil.png"
+  let rock = new Image(tWidth,tWidth);
   rock.src = "./images/rock.jpg"
+  let unselected_inv = new Image(tWidth,tWidth);
+  unselected_inv.src = "./images/unselected_inv.png"
   const grass_water = new Image(tWidth,tWidth);
   grass_water.src = "./images/grass_water.jpg"
+  const inv_slot = new Image(tWidth,tWidth);
+  inv_slot.src = "./images/inv_slot.png"
     let facing="down";
+    let selected = 0;
     let xpos = 10;
     let ypos = 10;
+    const floor = [
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,9,9,0,
+      0,0,0,0,0,0,0,9,9,0,
+      0,0,0,0,0,0,0,0,0,0
+    ]
+  
+    const map = [
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,1,0,0,0,0,
+      0,0,0,0,0,1,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0
+    ];
+
+
     function add_action(e) {
       if (e.keyCode == 68) {
         if (!actions.includes("right")){
@@ -72,6 +107,31 @@ document.addEventListener("DOMContentLoaded", function () {
           actions.push("down")
         }
       }
+      if (e.keyCode == 32) {
+        let next_block = nextblockcheck(xpos,ypos);
+        let idx = next_block[1] * cols + next_block[0];
+        switch(holding[selected]){
+          case "rock":
+            if (map[idx] === 0) {
+              map[idx] = 1;
+            }
+        }
+      }
+      if (e.keyCode == 49) {
+        selected = 0
+      }
+      if (e.keyCode == 50) {
+        selected = 1
+      }
+      if (e.keyCode == 51) {
+        selected = 2
+      }
+      if (e.keyCode == 52) {
+        selected = 3
+      }
+      if (e.keyCode == 53) {
+        selected = 4
+      }
     }
 
     function remove_action(e) {
@@ -91,31 +151,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
 
 
-  const floor = [
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0
-  ]
-
-  const map = [
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,1,0,0,0,0,
-    0,0,0,0,0,1,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0,
-    0,0,0,0,0,0,0,0,0,0
-  ];
+  
 
   const updateAll = () => {
     document.onkeydown = add_action;
@@ -135,26 +171,27 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   const move = () => {
-    let nextblock = blockcheck(nextpix()[0], nextpix()[1])
+    let nextpixel = nextpix();
+    let nextblock = blockcheck(nextpixel[0], nextpixel[1])
     let next_block_idx = nextblock[1] * cols + nextblock[0];
     if (actions.includes("right")) {
       facing = "right";
-      if (walkable.includes(map[next_block_idx]))
+      if (walkable.includes(map[next_block_idx]) && inbounds())
       xpos+=1;
     }
     if (actions.includes("left")) {
       facing = "left"
-      if (walkable.includes(map[next_block_idx]))
+      if (walkable.includes(map[next_block_idx]) && inbounds())
       xpos-=1;
     }
     if (actions.includes("up")) {
       facing = "up"
-      if (walkable.includes(map[next_block_idx]))
+      if (walkable.includes(map[next_block_idx]) && inbounds())
       ypos-=1;
     }
     if (actions.includes("down")) {
       facing = "down"
-      if (walkable.includes(map[next_block_idx]))
+      if (walkable.includes(map[next_block_idx]) && inbounds())
       ypos+=1;
     }
     if (actions.includes("up") && actions.includes("left")) {
@@ -178,7 +215,10 @@ document.addEventListener("DOMContentLoaded", function () {
         let idx = i * cols + j;
         if(floor[idx] === 0) {
           ctx.drawImage(grass, tWidth * j, tHeight * i, tWidth, tWidth);
-      }
+        }
+        if(floor[idx] === 9) {
+          ctx.drawImage(soil, tWidth * j, tHeight * i, tWidth, tWidth);
+        }
     }
   }
 }
@@ -214,8 +254,27 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const printbar = () => {
-    ctx.fillStyle = "black"
-    ctx.fillRect(0, 600, tWidth, tWidth)
+    for (i = 0; i < holding.length; i++) {
+      if (i === selected) {
+        ctx.drawImage(inv_slot, tWidth * i, canvas.width, tWidth,tWidth)
+      } else {
+        ctx.drawImage(unselected_inv, tWidth * i, canvas.width, tWidth,tWidth)
+      }
+      switch(holding[i]) {
+        case "rock":
+          ctx.drawImage(rock, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
+          break;
+        case "grass":
+          ctx.drawImage(grass, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
+          break;
+        case "grass":
+          ctx.drawImage(grass, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
+          break;
+        case "grass":
+          ctx.drawImage(grass, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
+          break;
+      }
+    }
   }
 
   // const currblock = () => {
@@ -225,6 +284,41 @@ document.addEventListener("DOMContentLoaded", function () {
   // }
 
   const nextpix = () => {
+    let next_x = xpos
+    let next_y = ypos
+    switch(facing) {
+      case "left":
+        next_x -= (tWidth/2) + 1;
+        break;
+      case "right":
+        next_x += (tWidth/2) + 1;
+        break;
+      case "down":
+        next_y += (tWidth/2) + 1;
+        break;
+      case "up":
+        next_y -= (tWidth/2) + 1;
+        break;
+      case "up_left":
+        next_x -= (tWidth/2) + 1;
+        next_y -= (tWidth/2) + 1;
+        break;
+      case "up_right":
+        next_x += (tWidth/2) + 1;
+        next_y -= (tWidth/2) + 1;
+        break;
+      case "down_left":
+        next_x -= (tWidth/2) + 1;
+        next_y += (tWidth/2) + 1;
+        break;
+      case "down_right":
+        next_x += (tWidth/2) + 1;
+        next_y += (tWidth/2) + 1;
+    }
+    return [next_x, next_y]
+  }
+
+  const inbounds = () => {
     let next_x = xpos
     let next_y = ypos
     switch(facing) {
@@ -256,7 +350,7 @@ document.addEventListener("DOMContentLoaded", function () {
         next_x += 1;
         next_y += 1;
     }
-    return [next_x, next_y]
+    return next_x + tWidth <= canvas.width && next_y + tWidth <= 600 && next_x >= 0 && next_y >= 0
   }
 
   function blockcheck(x,y) {
@@ -301,10 +395,12 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const printnextblock = () => {
+    if (holding[selected] != ""){
     let next_block = nextblockcheck(xpos,ypos);
     ctx.globalAlpha = 0.5;
-    ctx.drawImage(rock, tWidth * next_block[0], tWidth* next_block[1], tWidth, tWidth);
+    ctx.drawImage(eval(holding[selected]), tWidth * next_block[0], tWidth* next_block[1], tWidth, tWidth);
     ctx.globalAlpha = 1.0;
+    }
   }
 
   const printchar = () => {
