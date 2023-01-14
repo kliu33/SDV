@@ -138,24 +138,24 @@ document.addEventListener("DOMContentLoaded", function () {
     let nextblock = blockcheck(nextpix()[0], nextpix()[1])
     let next_block_idx = nextblock[1] * cols + nextblock[0];
     if (actions.includes("right")) {
+      facing = "right";
       if (walkable.includes(map[next_block_idx]))
       xpos+=1;
-      facing = "right";
     }
     if (actions.includes("left")) {
+      facing = "left"
       if (walkable.includes(map[next_block_idx]))
       xpos-=1;
-      facing = "left"
     }
     if (actions.includes("up")) {
+      facing = "up"
       if (walkable.includes(map[next_block_idx]))
       ypos-=1;
-      facing = "up"
     }
     if (actions.includes("down")) {
+      facing = "down"
       if (walkable.includes(map[next_block_idx]))
       ypos+=1;
-      facing = "down"
     }
     if (actions.includes("up") && actions.includes("left")) {
       facing = "up_left"
@@ -189,25 +189,26 @@ document.addEventListener("DOMContentLoaded", function () {
         let idx = i * cols + j;
         if(map[idx] === 1) {
           ctx.drawImage(rock, tWidth * j, tHeight * i, tWidth, tWidth);
-        } else if (map[idx] === 0) {
-            ctx.drawImage(grass, tWidth * j, tHeight * i, tWidth, tWidth);
-        } else if (map[idx] === 2) {
-          ctx.drawImage(water, tWidth * j, tHeight * i, tWidth, tWidth);
-        } else if (map[idx] === 3) {
-          ctx.drawImage(brick, tWidth * j, tHeight * i, tWidth, tWidth);
-        }  else if (map[idx] === 5) {
-          ctx.drawImage(grass_water, tWidth * j, tHeight * i, tWidth, tWidth);
-        } else if (map[idx] === 6) {
-          ctx.drawImage(wood, tWidth * j, tHeight * i, tWidth, tWidth);
-        }else if (map[idx] === 11) {
-          ctx.drawImage(pond_up_left, tWidth * j, tHeight * i, tWidth, tWidth);
-        }else if (map[idx] === 12) {
-          ctx.drawImage(pond_up_right, tWidth * j, tHeight * i, tWidth, tWidth);
-        }else if (map[idx] === 13) {
-          ctx.drawImage(pond_down_right, tWidth * j, tHeight * i, tWidth, tWidth);
-        }else if (map[idx] === 14) {
-          ctx.drawImage(pond_down_left, tWidth * j, tHeight * i, tWidth, tWidth);
-        }
+        } 
+        // else if (map[idx] === 0) {
+        //     ctx.drawImage(grass, tWidth * j, tHeight * i, tWidth, tWidth);
+        // } else if (map[idx] === 2) {
+        //   ctx.drawImage(water, tWidth * j, tHeight * i, tWidth, tWidth);
+        // } else if (map[idx] === 3) {
+        //   ctx.drawImage(brick, tWidth * j, tHeight * i, tWidth, tWidth);
+        // }  else if (map[idx] === 5) {
+        //   ctx.drawImage(grass_water, tWidth * j, tHeight * i, tWidth, tWidth);
+        // } else if (map[idx] === 6) {
+        //   ctx.drawImage(wood, tWidth * j, tHeight * i, tWidth, tWidth);
+        // }else if (map[idx] === 11) {
+        //   ctx.drawImage(pond_up_left, tWidth * j, tHeight * i, tWidth, tWidth);
+        // }else if (map[idx] === 12) {
+        //   ctx.drawImage(pond_up_right, tWidth * j, tHeight * i, tWidth, tWidth);
+        // }else if (map[idx] === 13) {
+        //   ctx.drawImage(pond_down_right, tWidth * j, tHeight * i, tWidth, tWidth);
+        // }else if (map[idx] === 14) {
+        //   ctx.drawImage(pond_down_left, tWidth * j, tHeight * i, tWidth, tWidth);
+        // }
       }
     }
   }
