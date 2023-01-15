@@ -8,9 +8,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const rows = 10;
   const cols = 10;
   const walkable = [0, 9, 27];
-  const holding = ["rock","grunk1","","",""];
+  const mineable = [50];
+  const holding = ["rock","grunk1","pickaxe","",""];
   const holding_amount = [5,1,0,0,0];
-  
+
+  const dict = {
+    "rock": 50,
+    "grass": 0,
+    "wood": 1,
+    "black": -1
+  };
+
+  function getKeyByValue(object, value) {
+    return Object.keys(object).find(key => object[key] === value);
+  }
 
 
   const char_up_right = new Image(tWidth,tWidth);
@@ -41,8 +52,6 @@ document.addEventListener("DOMContentLoaded", function () {
   unselected_inv.src = "./images/unselected_inv.png"
   const inv_slot = new Image(tWidth,tWidth);
   inv_slot.src = "./images/inv_slot.png"
-  const radish_seed = new Image(tWidth,tWidth);
-  radish_seed.src = "./images/radish_seed.png"
   const house1 = new Image(tWidth,tWidth);
   house1.src = "./images/house1.png"
   const house2 = new Image(tWidth,tWidth);
@@ -107,8 +116,6 @@ document.addEventListener("DOMContentLoaded", function () {
   grunk6.src = "./images/grunk6.png"
   const grunk7 = new Image(tWidth,tWidth);
   grunk7.src = "./images/grunk7.png"
-  const radish_5 = new Image(tWidth,tWidth);
-  radish_5.src = "./images/radish_5.png"
   const num1 = new Image(tWidth,tWidth);
   num1.src = "./images/num1.png"
   const num2 = new Image(tWidth,tWidth);
@@ -127,6 +134,8 @@ document.addEventListener("DOMContentLoaded", function () {
   num8.src = "./images/num8.png"
   const num9 = new Image(tWidth,tWidth);
   num9.src = "./images/num9.png"
+  const pickaxe = new Image(tWidth,tWidth);
+  pickaxe.src = "./images/pickaxe.png"
     let facing="down";
     let selected = 0;
     let xpos = 419;
@@ -208,6 +217,7 @@ document.addEventListener("DOMContentLoaded", function () {
         e.preventDefault();
         let next_block = nextblockcheck(xpos,ypos);
         let idx = next_block[1] * cols + next_block[0];
+        let next_pix4 = nextpix();
         switch(holding[selected]){
           case "":
             if (map[idx] instanceof Seed) {
@@ -219,19 +229,26 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             break;
           case "rock":
-            if (floor[idx] === 0) {
-              if (holding_amount[selected] >= 1) {
-                holding_amount[selected] -= 1;
-                if (holding_amount[selected] === 0) {
-                  holding[selected] = "";
+            if (inhouse(next_pix4[0], next_pix4[1])) {
+              if (house_floor[idx] === 1) {
+                if (holding_amount[selected] >= 1) {
+                  holding_amount[selected] -= 1;
+                  house_map[idx] = 50;
+                  if (holding_amount[selected] === 0) {
+                    holding[selected] = "";
+                  }
                 }
               }
-              map[idx] = 1;
-            }
-            break;
-          case "radish_seed":
-            if (floor[idx] === 9) {
-              map[idx] = 10;
+            } else {
+              if (floor[idx] === 0) {
+                if (holding_amount[selected] >= 1) {
+                  holding_amount[selected] -= 1;
+                  if (holding_amount[selected] === 0) {
+                    holding[selected] = "";
+                  }
+                }
+                map[idx] = 50;
+              }
             }
             break;
           case "grunk1":
@@ -244,6 +261,28 @@ document.addEventListener("DOMContentLoaded", function () {
               } 
               let g = new Seed("grunk");
               map[idx] = g;
+            }
+            break;
+          case "pickaxe":
+            if (mineable.includes(map[idx])) {
+              if (holding.includes(getKeyByValue(dict,map[idx]))) {
+                let hold_item = getKeyByValue(dict,map[idx])
+                if (holding_amount[holding.indexOf(hold_item)] <= 8){
+                  holding_amount[holding.indexOf(hold_item)] += 1;
+                  map[idx] = 0;
+                  console.log(holding_amount)
+                }
+              } else {
+                if (holding.includes("")) {
+                  let new_idx = holding.indexOf("")
+                  holding[new_idx] = getKeyByValue(dict,map[idx])
+                  holding_amount[new_idx] += 1
+                  map[idx] = 0;
+                } else {
+                  alert("Inventory is full!")
+                }
+              }
+
             }
         }
       }
@@ -405,8 +444,11 @@ document.addEventListener("DOMContentLoaded", function () {
       for (let j = 0; j < cols; j++) {
         let idx = i * cols + j;
         if (inhouse(xpos,ypos)) {
+          if(house_map[idx] === 50) {
+            ctx.drawImage(rock, tWidth * j, tHeight * i, tWidth, tWidth);
+          } 
         } else {
-        if(map[idx] === 1) {
+        if(map[idx] === 50) {
           ctx.drawImage(rock, tWidth * j, tHeight * i, tWidth, tWidth);
         } 
         if (map[idx] <= 29 && map[idx] >= 5) {
