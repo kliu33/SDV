@@ -1,3 +1,4 @@
+// const Seed = require("./scripts/seed.js");
 
 document.addEventListener("DOMContentLoaded", function () {
   const canvas = document.getElementById("game-canvas");
@@ -7,11 +8,10 @@ document.addEventListener("DOMContentLoaded", function () {
   const rows = 10;
   const cols = 10;
   const walkable = [0, 9];
-  const holding = ["rock","radish_seed","grunk_seed","",""];
+  const holding = ["rock","grunk1","","",""];
   
 
 
-  let actions = [];
   const char_up_right = new Image(tWidth,tWidth);
   char_up_right.src = "./images/char_up_right.png"
   const char_up_left = new Image(tWidth,tWidth);
@@ -30,8 +30,6 @@ document.addEventListener("DOMContentLoaded", function () {
   char_down.src = "./images/char_down.png"
   const wood = new Image(tWidth,tWidth);
   wood.src = "./images/wood.jpg"
-  const water = new Image(tWidth,tWidth);
-  water.src = "./images/water.jpg"
   const grass = new Image(tWidth,tWidth);
   grass.src = "./images/grass.png"
   const soil = new Image(tWidth,tWidth);
@@ -44,8 +42,20 @@ document.addEventListener("DOMContentLoaded", function () {
   inv_slot.src = "./images/inv_slot.png"
   const radish_seed = new Image(tWidth,tWidth);
   radish_seed.src = "./images/radish_seed.png"
-  const grunk_seed = new Image(tWidth,tWidth);
-  grunk_seed.src = "./images/grunk_seed.png"
+  const grunk1 = new Image(tWidth,tWidth);
+  grunk1.src = "./images/grunk1.png"
+  const grunk2 = new Image(tWidth,tWidth);
+  grunk2.src = "./images/grunk2.png"
+  const grunk3 = new Image(tWidth,tWidth);
+  grunk3.src = "./images/grunk3.png"
+  const grunk4 = new Image(tWidth,tWidth);
+  grunk4.src = "./images/grunk4.png"
+  const grunk5 = new Image(tWidth,tWidth);
+  grunk5.src = "./images/grunk5.png"
+  const grunk6 = new Image(tWidth,tWidth);
+  grunk6.src = "./images/grunk6.png"
+  const grunk7 = new Image(tWidth,tWidth);
+  grunk7.src = "./images/grunk7.png"
   const radish_5 = new Image(tWidth,tWidth);
   radish_5.src = "./images/radish_5.png"
     let facing="down";
@@ -111,9 +121,10 @@ document.addEventListener("DOMContentLoaded", function () {
               map[idx] = 10;
             }
             break;
-          case "grunk_seed":
+          case "grunk1":
             if (floor[idx] === 9) {
-              map[idx] = 11;
+              let g = new Seed("grunk");
+              map[idx] = g;
             }
         }
       }
@@ -149,8 +160,6 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     }
 
-
-
   
 
   const updateAll = () => {
@@ -172,7 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const move = () => {
     let nextpixel = nextpix();
-    let nextblock = blockcheck(nextpixel[0], nextpixel[1])
+    let nextblock = currentblockcheck(nextpixel[0], nextpixel[1])
     let next_block_idx = nextblock[1] * cols + nextblock[0];
     if (moving_right) {
       facing = "right";
@@ -229,11 +238,16 @@ document.addEventListener("DOMContentLoaded", function () {
         let idx = i * cols + j;
         if(map[idx] === 1) {
           ctx.drawImage(rock, tWidth * j, tHeight * i, tWidth, tWidth);
-        } else if(map[idx] === 10) {
-          ctx.drawImage(radish_seed, tWidth * j, tHeight * i, tWidth, tWidth);
-        } else if(map[idx] === 11) {
-          ctx.drawImage(grunk_seed, tWidth * j, tHeight * i, tWidth, tWidth);
         } 
+        else if(map[idx] === 10) {
+          ctx.drawImage(radish_seed, tWidth * j, tHeight * i, tWidth, tWidth);
+        } 
+        // else if(map[idx] === 11) {
+        //   ctx.drawImage(grunk_seed, tWidth * j, tHeight * i, tWidth, tWidth);
+        // } 
+        if(map[idx] instanceof Seed) {
+          ctx.drawImage(eval(map[idx].type.concat(map[idx].stage)), tWidth * j, tHeight * i, tWidth, tWidth);
+        }
       }
     }
   }
@@ -252,12 +266,23 @@ document.addEventListener("DOMContentLoaded", function () {
         case "radish_seed":
           ctx.drawImage(radish_seed, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
           break;
-        case "grunk_seed":
-          ctx.drawImage(grunk_seed, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
+        case "grunk1":
+          ctx.drawImage(grunk1, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
           break;  
       }
     }
   }
+
+  // const checkseeds = () => {
+  //   for (let i = 0; i < rows; i++) {
+  //     for (let j = 0; j < cols; j++) {
+  //       let idx = i * cols + j;
+  //       if(map[idx] instanceof Seed) {
+  //         map[idx] = map[idx]
+  //       } 
+  //     }
+  //   }
+  // }
 
   // const currblock = () => {
   //   let cur_x = Math.floor((xpos+(tWidth/2))/tWidth)
@@ -335,7 +360,7 @@ document.addEventListener("DOMContentLoaded", function () {
     return next_x + tWidth <= canvas.width && next_y + tWidth <= 600 && next_x >= 0 && next_y >= 0
   }
 
-  function blockcheck(x,y) {
+  function currentblockcheck(x,y) {
     let block_x = Math.floor((x+(tWidth/2))/tWidth)
     let block_y = Math.floor((y+(tWidth/2))/tWidth)
     return [block_x, block_y]
@@ -378,10 +403,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const printnextblock = () => {
     if (holding[selected] != ""){
-    let next_block = nextblockcheck(xpos,ypos);
-    ctx.globalAlpha = 0.5;
-    ctx.drawImage(eval(holding[selected]), tWidth * next_block[0], tWidth* next_block[1], tWidth, tWidth);
-    ctx.globalAlpha = 1.0;
+      let next_block = nextblockcheck(xpos,ypos);
+      if (next_block[0] < 10 && next_block[1] < 10) {
+        ctx.globalAlpha = 0.5;
+        ctx.drawImage(eval(holding[selected]), tWidth * next_block[0], tWidth* next_block[1], tWidth, tWidth);
+        ctx.globalAlpha = 1.0;
+      }
     }
   }
 
