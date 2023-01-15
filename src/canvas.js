@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const cols = 10;
   const walkable = [0, 9];
   const holding = ["rock","grunk1","","",""];
+  const holding_amount = [5,1,0,0,0];
   
 
 
@@ -58,6 +59,24 @@ document.addEventListener("DOMContentLoaded", function () {
   grunk7.src = "./images/grunk7.png"
   const radish_5 = new Image(tWidth,tWidth);
   radish_5.src = "./images/radish_5.png"
+  const num1 = new Image(tWidth,tWidth);
+  num1.src = "./images/num1.png"
+  const num2 = new Image(tWidth,tWidth);
+  num2.src = "./images/num2.png"
+  const num3 = new Image(tWidth,tWidth);
+  num3.src = "./images/num3.png"
+  const num4 = new Image(tWidth,tWidth);
+  num4.src = "./images/num4.png"
+  const num5 = new Image(tWidth,tWidth);
+  num5.src = "./images/num5.png"
+  const num6 = new Image(tWidth,tWidth);
+  num6.src = "./images/num6.png"
+  const num7 = new Image(tWidth,tWidth);
+  num7.src = "./images/num7.png"
+  const num8 = new Image(tWidth,tWidth);
+  num8.src = "./images/num8.png"
+  const num9 = new Image(tWidth,tWidth);
+  num9.src = "./images/num9.png"
     let facing="down";
     let selected = 0;
     let xpos = 10;
@@ -111,8 +130,23 @@ document.addEventListener("DOMContentLoaded", function () {
         let next_block = nextblockcheck(xpos,ypos);
         let idx = next_block[1] * cols + next_block[0];
         switch(holding[selected]){
+          case "":
+            if (map[idx] instanceof Seed) {
+              if (map[idx].stage === 7) {
+                holding[selected] = map[idx].type.concat(map[idx].stage)
+                holding_amount[selected] += 1
+                map[idx] = 0;
+              }
+            }
+            break;
           case "rock":
             if (floor[idx] === 0) {
+              if (holding_amount[selected] >= 1) {
+                holding_amount[selected] -= 1;
+                if (holding_amount[selected] === 0) {
+                  holding[selected] = "";
+                }
+              }
               map[idx] = 1;
             }
             break;
@@ -123,6 +157,12 @@ document.addEventListener("DOMContentLoaded", function () {
             break;
           case "grunk1":
             if (floor[idx] === 9) {
+              if (holding_amount[selected] >= 1) {
+                holding_amount[selected] -= 1;
+                if (holding_amount[selected] === 0) {
+                  holding[selected] = "";
+                }
+              } 
               let g = new Seed("grunk");
               map[idx] = g;
             }
@@ -259,16 +299,11 @@ document.addEventListener("DOMContentLoaded", function () {
       } else {
         ctx.drawImage(unselected_inv, tWidth * i, canvas.width, tWidth,tWidth)
       }
-      switch(holding[i]) {
-        case "rock":
-          ctx.drawImage(rock, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
-          break;
-        case "radish_seed":
-          ctx.drawImage(radish_seed, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
-          break;
-        case "grunk1":
-          ctx.drawImage(grunk1, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
-          break;  
+      if (holding[i] != "") {
+        ctx.drawImage(eval(holding[i]), (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
+      }
+      if (holding_amount[i] > 0) {
+        ctx.drawImage(eval(`num${holding_amount[i]}`), (tWidth * i) + (tWidth * (4/6)), canvas.width + (tWidth * (4/6)), tWidth*(2/6),tWidth*(2/6))
       }
     }
   }
