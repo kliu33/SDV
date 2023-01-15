@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const cols = 10;
   const walkable = [0, 9, 27];
   const mineable = [50];
+  const placeable = [0, 1, 50];
   const holding = ["rock","grunk1","pickaxe","",""];
   const holding_amount = [5,1,0,0,0];
 
@@ -16,7 +17,8 @@ document.addEventListener("DOMContentLoaded", function () {
     "rock": 50,
     "grass": 0,
     "wood": 1,
-    "black": -1
+    "black": -1,
+    "pickaxe": 101
   };
 
   function getKeyByValue(object, value) {
@@ -218,6 +220,17 @@ document.addEventListener("DOMContentLoaded", function () {
         let next_block = nextblockcheck(xpos,ypos);
         let idx = next_block[1] * cols + next_block[0];
         let next_pix4 = nextpix();
+        let block_in_house = inhouse(next_pix4[0], next_pix4[1])
+        let can_place;
+        if (block_in_house){
+          can_place = (house_map[idx] === 0 && placeable.includes(house_floor[idx]));
+        } else {
+          can_place = (map[idx] === 0 && placeable.includes(floor[idx]));
+        }
+        if (!can_place && placeable.includes(dict[holding[selected]])) {
+          alert("Can't place here")
+        }
+        console.log(dict[holding[selected]])
         switch(holding[selected]){
           case "":
             if (map[idx] instanceof Seed) {
@@ -229,8 +242,8 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             break;
           case "rock":
-            if (inhouse(next_pix4[0], next_pix4[1])) {
-              if (house_floor[idx] === 1) {
+            if (block_in_house) {
+              if (can_place) {
                 if (holding_amount[selected] >= 1) {
                   holding_amount[selected] -= 1;
                   house_map[idx] = 50;
@@ -240,7 +253,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 }
               }
             } else {
-              if (floor[idx] === 0) {
+              if (can_place) {
                 if (holding_amount[selected] >= 1) {
                   holding_amount[selected] -= 1;
                   if (holding_amount[selected] === 0) {
