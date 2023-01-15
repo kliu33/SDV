@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const rows = 10;
   const cols = 10;
   const walkable = [0, 9];
-  const holding = ["rock","radish_seed","","",""];
+  const holding = ["rock","radish_seed","grunk_seed","",""];
   
 
 
@@ -44,12 +44,18 @@ document.addEventListener("DOMContentLoaded", function () {
   inv_slot.src = "./images/inv_slot.png"
   const radish_seed = new Image(tWidth,tWidth);
   radish_seed.src = "./images/radish_seed.png"
+  const grunk_seed = new Image(tWidth,tWidth);
+  grunk_seed.src = "./images/grunk_seed.png"
   const radish_5 = new Image(tWidth,tWidth);
   radish_5.src = "./images/radish_5.png"
     let facing="down";
     let selected = 0;
     let xpos = 10;
     let ypos = 10;
+    let moving_right = false;
+    let moving_left = false;
+    let moving_down = false;
+    let moving_up = false;
     const floor = [
       0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
@@ -79,24 +85,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function add_action(e) {
       if (e.keyCode == 68) {
-        if (!actions.includes("right")){
-          actions.push("right")
-        }
+        moving_right = true;
       }
       if (e.keyCode == 65) {
-        if (!actions.includes("left")){
-          actions.push("left")
-        }
+        moving_left = true;
       }
       if (e.keyCode == 87) {
-        if (!actions.includes("up")){
-          actions.push("up")
-        }
+        moving_up = true
       }
       if (e.keyCode == 83) {
-        if (!actions.includes("down")){
-          actions.push("down")
-        }
+        moving_down = true
       }
       if (e.keyCode == 32) {
         e.preventDefault();
@@ -111,6 +109,11 @@ document.addEventListener("DOMContentLoaded", function () {
           case "radish_seed":
             if (floor[idx] === 9) {
               map[idx] = 10;
+            }
+            break;
+          case "grunk_seed":
+            if (floor[idx] === 9) {
+              map[idx] = 11;
             }
         }
       }
@@ -133,16 +136,16 @@ document.addEventListener("DOMContentLoaded", function () {
 
     function remove_action(e) {
       if (e.keyCode == 68) {
-        actions.splice(actions.indexOf("right"))
+        moving_right = false;
       }
       if (e.keyCode == 65) {
-        actions.splice(actions.indexOf("left"))
+        moving_left = false;
       }
       if (e.keyCode == 87) {
-        actions.splice(actions.indexOf("up"))
+        moving_up = false;
       }
       if (e.keyCode == 83) {
-        actions.splice(actions.indexOf("down"))
+        moving_down = false;
       }
     }
 
@@ -171,36 +174,36 @@ document.addEventListener("DOMContentLoaded", function () {
     let nextpixel = nextpix();
     let nextblock = blockcheck(nextpixel[0], nextpixel[1])
     let next_block_idx = nextblock[1] * cols + nextblock[0];
-    if (actions.includes("right")) {
+    if (moving_right) {
       facing = "right";
       if (walkable.includes(map[next_block_idx]) && inbounds())
       xpos+=1;
     }
-    if (actions.includes("left")) {
+    if (moving_left) {
       facing = "left"
       if (walkable.includes(map[next_block_idx]) && inbounds())
       xpos-=1;
     }
-    if (actions.includes("up")) {
+    if (moving_up) {
       facing = "up"
       if (walkable.includes(map[next_block_idx]) && inbounds())
       ypos-=1;
     }
-    if (actions.includes("down")) {
+    if (moving_down) {
       facing = "down"
       if (walkable.includes(map[next_block_idx]) && inbounds())
       ypos+=1;
     }
-    if (actions.includes("up") && actions.includes("left")) {
+    if (moving_up && moving_left) {
       facing = "up_left"
     }
-    if (actions.includes("down") && actions.includes("left")) {
+    if (moving_down && moving_left) {
       facing = "down_left"
     }
-    if (actions.includes("up") && actions.includes("right")) {
+    if (moving_up && moving_right) {
       facing = "up_right"
     }
-    if (actions.includes("down") && actions.includes("right")) {
+    if (moving_down && moving_right) {
       facing = "down_right"
     }
   }
@@ -228,6 +231,8 @@ document.addEventListener("DOMContentLoaded", function () {
           ctx.drawImage(rock, tWidth * j, tHeight * i, tWidth, tWidth);
         } else if(map[idx] === 10) {
           ctx.drawImage(radish_seed, tWidth * j, tHeight * i, tWidth, tWidth);
+        } else if(map[idx] === 11) {
+          ctx.drawImage(grunk_seed, tWidth * j, tHeight * i, tWidth, tWidth);
         } 
       }
     }
@@ -247,6 +252,9 @@ document.addEventListener("DOMContentLoaded", function () {
         case "radish_seed":
           ctx.drawImage(radish_seed, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
           break;
+        case "grunk_seed":
+          ctx.drawImage(grunk_seed, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
+          break;  
       }
     }
   }
