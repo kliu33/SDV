@@ -99,6 +99,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
       }
       if (e.keyCode == 32) {
+        e.preventDefault();
         let next_block = nextblockcheck(xpos,ypos);
         let idx = next_block[1] * cols + next_block[0];
         switch(holding[selected]){
