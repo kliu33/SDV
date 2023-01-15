@@ -26,3 +26,8 @@ body {
     /* background-image: url("../../images/backdrop.jpg"); */
    background-color:#ccffcc;
 }
+
+#logo {
+    height: 60px;
+    width: 60px;
+}
