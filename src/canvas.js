@@ -6,8 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const tHeight = 60;
   const rows = 10;
   const cols = 10;
-  const walkable = [0];
-  const holding = ["rock","","","",""];
+  const walkable = [0, 9];
+  const holding = ["rock","radish_seed","","",""];
   
 
 
@@ -20,15 +20,6 @@ document.addEventListener("DOMContentLoaded", function () {
   char_down_left.src = "./images/char_down_left.png"
   const char_down_right = new Image(tWidth,tWidth);
   char_down_right.src = "./images/char_down_right.png"
-  const pond_down_right = new Image(tWidth,tWidth);
-  pond_down_right.src = "./images/pond_down_right.png"
-  const pond_down_left = new Image(tWidth,tWidth);
-  pond_down_left.src = "./images/pond_down_left.png"
-  const pond_up_left = new Image(tWidth,tWidth);
-  pond_up_left.src = "./images/pond_up_left.png"
-  const pond_up_right = new Image(tWidth,tWidth);
-  pond_up_right.src = "./images/pond_up_right.png"
-
   const char_left = new Image(tWidth,tWidth);
   char_left.src = "./images/char_left.png"
   const char_right = new Image(tWidth,tWidth);
@@ -41,20 +32,20 @@ document.addEventListener("DOMContentLoaded", function () {
   wood.src = "./images/wood.jpg"
   const water = new Image(tWidth,tWidth);
   water.src = "./images/water.jpg"
-  const brick = new Image(tWidth,tWidth);
-  brick.src = "./images/brick.jpg"
   const grass = new Image(tWidth,tWidth);
   grass.src = "./images/grass.png"
   const soil = new Image(tWidth,tWidth);
   soil.src = "./images/soil.png"
-  let rock = new Image(tWidth,tWidth);
+  const rock = new Image(tWidth,tWidth);
   rock.src = "./images/rock.jpg"
-  let unselected_inv = new Image(tWidth,tWidth);
+  const unselected_inv = new Image(tWidth,tWidth);
   unselected_inv.src = "./images/unselected_inv.png"
-  const grass_water = new Image(tWidth,tWidth);
-  grass_water.src = "./images/grass_water.jpg"
   const inv_slot = new Image(tWidth,tWidth);
   inv_slot.src = "./images/inv_slot.png"
+  const radish_seed = new Image(tWidth,tWidth);
+  radish_seed.src = "./images/radish_seed.png"
+  const radish_5 = new Image(tWidth,tWidth);
+  radish_5.src = "./images/radish_5.png"
     let facing="down";
     let selected = 0;
     let xpos = 10;
@@ -74,8 +65,8 @@ document.addEventListener("DOMContentLoaded", function () {
   
     const map = [
       0,0,0,0,0,0,0,0,0,0,
-      0,0,0,0,0,1,0,0,0,0,
-      0,0,0,0,0,1,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
@@ -112,8 +103,13 @@ document.addEventListener("DOMContentLoaded", function () {
         let idx = next_block[1] * cols + next_block[0];
         switch(holding[selected]){
           case "rock":
-            if (map[idx] === 0) {
+            if (floor[idx] === 0) {
               map[idx] = 1;
+            }
+            break;
+          case "radish_seed":
+            if (floor[idx] === 9) {
+              map[idx] = 10;
             }
         }
       }
@@ -229,26 +225,9 @@ document.addEventListener("DOMContentLoaded", function () {
         let idx = i * cols + j;
         if(map[idx] === 1) {
           ctx.drawImage(rock, tWidth * j, tHeight * i, tWidth, tWidth);
+        } else if(map[idx] === 10) {
+          ctx.drawImage(radish_seed, tWidth * j, tHeight * i, tWidth, tWidth);
         } 
-        // else if (map[idx] === 0) {
-        //     ctx.drawImage(grass, tWidth * j, tHeight * i, tWidth, tWidth);
-        // } else if (map[idx] === 2) {
-        //   ctx.drawImage(water, tWidth * j, tHeight * i, tWidth, tWidth);
-        // } else if (map[idx] === 3) {
-        //   ctx.drawImage(brick, tWidth * j, tHeight * i, tWidth, tWidth);
-        // }  else if (map[idx] === 5) {
-        //   ctx.drawImage(grass_water, tWidth * j, tHeight * i, tWidth, tWidth);
-        // } else if (map[idx] === 6) {
-        //   ctx.drawImage(wood, tWidth * j, tHeight * i, tWidth, tWidth);
-        // }else if (map[idx] === 11) {
-        //   ctx.drawImage(pond_up_left, tWidth * j, tHeight * i, tWidth, tWidth);
-        // }else if (map[idx] === 12) {
-        //   ctx.drawImage(pond_up_right, tWidth * j, tHeight * i, tWidth, tWidth);
-        // }else if (map[idx] === 13) {
-        //   ctx.drawImage(pond_down_right, tWidth * j, tHeight * i, tWidth, tWidth);
-        // }else if (map[idx] === 14) {
-        //   ctx.drawImage(pond_down_left, tWidth * j, tHeight * i, tWidth, tWidth);
-        // }
       }
     }
   }
@@ -264,14 +243,8 @@ document.addEventListener("DOMContentLoaded", function () {
         case "rock":
           ctx.drawImage(rock, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
           break;
-        case "grass":
-          ctx.drawImage(grass, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
-          break;
-        case "grass":
-          ctx.drawImage(grass, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
-          break;
-        case "grass":
-          ctx.drawImage(grass, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
+        case "radish_seed":
+          ctx.drawImage(radish_seed, (tWidth * i) + (tWidth * (1/6)), canvas.width + (tWidth * (1/6)), tWidth*(4/6),tWidth*(4/6))
           break;
       }
     }
