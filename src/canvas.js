@@ -7,7 +7,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const tHeight = 60;
   const rows = 10;
   const cols = 10;
-  const walkable = [0, 9];
+  const walkable = [0, 9, 27];
   const holding = ["rock","grunk1","","",""];
   const holding_amount = [5,1,0,0,0];
   
@@ -43,6 +43,56 @@ document.addEventListener("DOMContentLoaded", function () {
   inv_slot.src = "./images/inv_slot.png"
   const radish_seed = new Image(tWidth,tWidth);
   radish_seed.src = "./images/radish_seed.png"
+  const house1 = new Image(tWidth,tWidth);
+  house1.src = "./images/house1.png"
+  const house2 = new Image(tWidth,tWidth);
+  house2.src = "./images/house2.png"
+  const house3 = new Image(tWidth,tWidth);
+  house3.src = "./images/house3.png"
+  const house4 = new Image(tWidth,tWidth);
+  house4.src = "./images/house4.png"
+  const house5 = new Image(tWidth,tWidth);
+  house5.src = "./images/house5.png"
+  const house6 = new Image(tWidth,tWidth);
+  house6.src = "./images/house6.png"
+  const house7 = new Image(tWidth,tWidth);
+  house7.src = "./images/house7.png"
+  const house8 = new Image(tWidth,tWidth);
+  house8.src = "./images/house8.png"
+  const house9 = new Image(tWidth,tWidth);
+  house9.src = "./images/house9.png"
+  const house10 = new Image(tWidth,tWidth);
+  house10.src = "./images/house10.png"
+  const house11 = new Image(tWidth,tWidth);
+  house11.src = "./images/house11.png"
+  const house12 = new Image(tWidth,tWidth);
+  house12.src = "./images/house12.png"
+  const house13 = new Image(tWidth,tWidth);
+  house13.src = "./images/house13.png"
+  const house14 = new Image(tWidth,tWidth);
+  house14.src = "./images/house14.png"
+  const house15 = new Image(tWidth,tWidth);
+  house15.src = "./images/house15.png"
+  const house16 = new Image(tWidth,tWidth);
+  house16.src = "./images/house16.png"
+  const house17 = new Image(tWidth,tWidth);
+  house17.src = "./images/house17.png"
+  const house18 = new Image(tWidth,tWidth);
+  house18.src = "./images/house18.png"
+  const house19 = new Image(tWidth,tWidth);
+  house19.src = "./images/house19.png"
+  const house20 = new Image(tWidth,tWidth);
+  house20.src = "./images/house20.png"
+  const house21 = new Image(tWidth,tWidth);
+  house21.src = "./images/house21.png"
+  const house22 = new Image(tWidth,tWidth);
+  house22.src = "./images/house22.png"
+  const house23 = new Image(tWidth,tWidth);
+  house23.src = "./images/house23.png"
+  const house24 = new Image(tWidth,tWidth);
+  house24.src = "./images/house24.png"
+  const house25 = new Image(tWidth,tWidth);
+  house25.src = "./images/house25.png"
   const grunk1 = new Image(tWidth,tWidth);
   grunk1.src = "./images/grunk1.png"
   const grunk2 = new Image(tWidth,tWidth);
@@ -79,31 +129,44 @@ document.addEventListener("DOMContentLoaded", function () {
   num9.src = "./images/num9.png"
     let facing="down";
     let selected = 0;
-    let xpos = 10;
-    let ypos = 10;
+    let xpos = 419;
+    let ypos = 277;
     let moving_right = false;
     let moving_left = false;
     let moving_down = false;
     let moving_up = false;
     const floor = [
       0,0,0,0,0,0,0,0,0,0,
+      0,9,9,9,0,0,0,0,0,0,
+      0,9,9,9,0,0,0,0,0,0,
+      0,9,9,9,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
-      0,0,0,0,0,0,0,0,0,0,
-      0,0,0,0,0,0,0,9,9,0,
-      0,0,0,0,0,0,0,9,9,0,
       0,0,0,0,0,0,0,0,0,0
+    ]
+
+    const house_floor = [
+      -1,-1,-1,-1,-1,1,1,1,1,1,
+      -1,-1,-1,-1,-1,1,1,1,1,1,
+      -1,-1,-1,-1,-1,1,1,1,1,1,
+      -1,-1,-1,-1,-1,1,1,1,1,1,
+      -1,-1,-1,-1,-1,1,1,1,1,1,
+      -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+      -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+      -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+      -1,-1,-1,-1,-1,-1,-1,-1,-1,-1,
+      -1,-1,-1,-1,-1,-1,-1,-1,-1,-1
     ]
   
     const map = [
-      0,0,0,0,0,0,0,0,0,0,
-      0,0,0,0,0,0,0,0,0,0,
-      0,0,0,0,0,0,0,0,0,0,
-      0,0,0,0,0,0,0,0,0,0,
-      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,5,6,7,8,9,
+      0,0,0,0,0,10,11,12,13,14,
+      0,0,0,0,0,15,16,17,18,19,
+      0,0,0,0,0,20,21,22,23,24,
+      0,0,0,0,0,25,26,27,28,29,
       0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
       0,0,0,0,0,0,0,0,0,0,
@@ -111,6 +174,22 @@ document.addEventListener("DOMContentLoaded", function () {
       0,0,0,0,0,0,0,0,0,0
     ];
 
+    const house_map = [
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,1,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0,
+      0,0,0,0,0,0,0,0,0,0
+    ];
+
+    function inhouse (x,y) {
+      return x > 270 && y < 270
+    }
 
     function add_action(e) {
       if (e.keyCode == 68) {
@@ -223,37 +302,76 @@ document.addEventListener("DOMContentLoaded", function () {
     let nextpixel = nextpix();
     let nextblock = currentblockcheck(nextpixel[0], nextpixel[1])
     let next_block_idx = nextblock[1] * cols + nextblock[0];
-    if (moving_right) {
-      facing = "right";
-      if (walkable.includes(map[next_block_idx]) && inbounds())
-      xpos+=1;
-    }
-    if (moving_left) {
-      facing = "left"
-      if (walkable.includes(map[next_block_idx]) && inbounds())
-      xpos-=1;
-    }
-    if (moving_up) {
-      facing = "up"
-      if (walkable.includes(map[next_block_idx]) && inbounds())
-      ypos-=1;
-    }
-    if (moving_down) {
-      facing = "down"
-      if (walkable.includes(map[next_block_idx]) && inbounds())
-      ypos+=1;
-    }
-    if (moving_up && moving_left) {
-      facing = "up_left"
-    }
-    if (moving_down && moving_left) {
-      facing = "down_left"
-    }
-    if (moving_up && moving_right) {
-      facing = "up_right"
-    }
-    if (moving_down && moving_right) {
-      facing = "down_right"
+    if (inhouse(xpos,ypos)) {
+      let next_pixel_x_y = nextpix();
+      if (moving_right) {
+        facing = "right";
+        if (walkable.includes(house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1])  && inbounds())
+        xpos+=1;
+      }
+      if (moving_left) {
+        facing = "left"
+        if (walkable.includes(house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
+        xpos-=1;
+      }
+      if (moving_up) {
+        facing = "up"
+        if (walkable.includes(house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
+        ypos-=1;
+      }
+      if (moving_down) {
+        facing = "down"
+        if (house_map[next_block_idx] === 1) {
+          ypos+=1;
+        }
+        if (walkable.includes(house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
+        ypos+=1;
+      }
+      if (moving_up && moving_left) {
+        facing = "up_left"
+      }
+      if (moving_down && moving_left) {
+        facing = "down_left"
+      }
+      if (moving_up && moving_right) {
+        facing = "up_right"
+      }
+      if (moving_down && moving_right) {
+        facing = "down_right"
+      }
+    } else {
+      if (moving_right) {
+        facing = "right";
+        if (walkable.includes(map[next_block_idx]) && inbounds())
+        xpos+=1;
+      }
+      if (moving_left) {
+        facing = "left"
+        if (walkable.includes(map[next_block_idx]) && inbounds())
+        xpos-=1;
+      }
+      if (moving_up) {
+        facing = "up"
+        if (walkable.includes(map[next_block_idx]) && inbounds())
+        ypos-=1;
+      }
+      if (moving_down) {
+        facing = "down"
+        if (walkable.includes(map[next_block_idx]) && inbounds())
+        ypos+=1;
+      }
+      if (moving_up && moving_left) {
+        facing = "up_left"
+      }
+      if (moving_down && moving_left) {
+        facing = "down_left"
+      }
+      if (moving_up && moving_right) {
+        facing = "up_right"
+      }
+      if (moving_down && moving_right) {
+        facing = "down_right"
+      }
     }
   }
 
@@ -262,12 +380,22 @@ document.addEventListener("DOMContentLoaded", function () {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         let idx = i * cols + j;
-        if(floor[idx] === 0) {
-          ctx.drawImage(grass, tWidth * j, tHeight * i, tWidth, tWidth);
-        }
-        if(floor[idx] === 9) {
-          ctx.drawImage(soil, tWidth * j, tHeight * i, tWidth, tWidth);
-        }
+        if (inhouse(xpos,ypos)) {
+          if(house_floor[idx] === -1) {
+            ctx.fillStyle = "black";
+            ctx.fillRect(tWidth * j, tHeight * i, tWidth, tWidth);
+          }
+          if(house_floor[idx] === 1) {
+            ctx.drawImage(wood, tWidth * j, tHeight * i, tWidth, tWidth);
+          }
+        } else {
+          if(floor[idx] === 0) {
+            ctx.drawImage(grass, tWidth * j, tHeight * i, tWidth, tWidth);
+          }
+          if(floor[idx] === 9) {
+            ctx.drawImage(soil, tWidth * j, tHeight * i, tWidth, tWidth);
+          }
+      }
     }
   }
 }
@@ -276,22 +404,21 @@ document.addEventListener("DOMContentLoaded", function () {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         let idx = i * cols + j;
+        if (inhouse(xpos,ypos)) {
+        } else {
         if(map[idx] === 1) {
           ctx.drawImage(rock, tWidth * j, tHeight * i, tWidth, tWidth);
         } 
-        else if(map[idx] === 10) {
-          ctx.drawImage(radish_seed, tWidth * j, tHeight * i, tWidth, tWidth);
-        } 
-        // else if(map[idx] === 11) {
-        //   ctx.drawImage(grunk_seed, tWidth * j, tHeight * i, tWidth, tWidth);
-        // } 
+        if (map[idx] <= 29 && map[idx] >= 5) {
+          ctx.drawImage(eval(`house${map[idx]-4}`), tWidth * j, tHeight * i, tWidth, tWidth);
+        }
         if(map[idx] instanceof Seed) {
           ctx.drawImage(eval(map[idx].type.concat(map[idx].stage)), tWidth * j, tHeight * i, tWidth, tWidth);
         }
       }
     }
   }
-
+  }
   const printbar = () => {
     for (i = 0; i < holding.length; i++) {
       if (i === selected) {
@@ -361,38 +488,39 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const inbounds = () => {
-    let next_x = xpos
-    let next_y = ypos
-    switch(facing) {
-      case "left":
-        next_x -= 1;
-        break;
-      case "right":
-        next_x += 1;
-        break;
-      case "down":
-        next_y += 1;
-        break;
-      case "up":
-        next_y -= 1;
-        break;
-      case "up_left":
-        next_x -= 1;
-        next_y -= 1;
-        break;
-      case "up_right":
-        next_x += 1;
-        next_y -= 1;
-        break;
-      case "down_left":
-        next_x -= 1;
-        next_y += 1;
-        break;
-      case "down_right":
-        next_x += 1;
-        next_y += 1;
-    }
-    return next_x + tWidth <= canvas.width && next_y + tWidth <= 600 && next_x >= 0 && next_y >= 0
+      let next_x = xpos
+      let next_y = ypos
+      switch(facing) {
+        case "left":
+          next_x -= 1;
+          break;
+        case "right":
+          next_x += 1;
+          break;
+        case "down":
+          next_y += 1;
+          break;
+        case "up":
+          next_y -= 1;
+          break;
+        case "up_left":
+          next_x -= 1;
+          next_y -= 1;
+          break;
+        case "up_right":
+          next_x += 1;
+          next_y -= 1;
+          break;
+        case "down_left":
+          next_x -= 1;
+          next_y += 1;
+          break;
+        case "down_right":
+          next_x += 1;
+          next_y += 1;
+      }
+      return next_x + tWidth <= canvas.width && next_y + tWidth <= 600 && next_x >= 0 && next_y >= 0
+      
   }
 
   function currentblockcheck(x,y) {
