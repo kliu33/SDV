@@ -4,11 +4,14 @@ class Char {
         this.x = x;
         this.y = y;
         this.money = 200;
+        this.hunger = 5;
         this.facing= "down";
         this.moving_right = false;
         this.moving_left = false;
         this.moving_down = false;
         this.moving_up = false;
+        this.holding = ["rock","grunk1","pickaxe","",""];
+        this.holding_amount = [5,2,0,0,0];
     }
 
     printchar(ctx) {

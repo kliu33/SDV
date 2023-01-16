@@ -3,11 +3,10 @@
 document.addEventListener("DOMContentLoaded", function () {
   const canvas = document.getElementById("game-canvas");
   const ctx = canvas.getContext("2d");
-  const walkable = [0, 9, 27];
+  const walkable = [0, 4, 5, 9, 27];
   const mineable = [50];
-  const placeable = [0, 1, 50];
-  const holding = ["rock","grunk1","pickaxe","",""];
-  const holding_amount = [5,1,0,0,0];
+  const placeable = [0, 4, 5, 1, 50];
+  let inshop = false;
 
   const dict = {
     "rock": 50,
@@ -22,7 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
   }
     const char = new Char(419,277);
     const stage = new Map();
-
+    const shop = new Shop(char);
     let selected = 0;
 
     function inhouse (x,y) {
@@ -30,6 +29,44 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function add_action(e) {
+      if (inshop) {
+        if (e.keyCode == 27) {
+          inshop = false;
+        }
+        
+        if (e.keyCode == 87) {
+          if (shop.selected != 0) {
+            shop.selected -= 1
+          }
+        }
+        if (e.keyCode == 83) {
+          if (shop.selected != shop.items.length - 1) {
+            shop.selected += 1
+          }
+        }
+        if (e.keyCode == 32) {
+          e.preventDefault();
+          let item = shop.items[shop.selected]
+          let price = shop.items_price[shop.items[shop.selected]];
+          if (char.money >= price) {
+              if (char.holding.includes(item) && char.holding_amount[char.holding.indexOf(item)] <= 8) {
+                char.money -= price
+                char.holding_amount[char.holding.indexOf(item)] += 1
+              } else if (char.holding.includes(item) && char.holding_amount[char.holding.indexOf(item)] === 9) {
+                alert("Cant hold anymore of this item")
+              } else if (char.holding.includes("")) {
+                char.money -= price
+                let new_idx2 = char.holding.indexOf("")
+                char.holding[new_idx2] = item
+                char.holding_amount[new_idx] += 1
+              } else {
+                alert("Inventory is full!")
+              }
+            }  else {
+            alert("Not enough money")
+          }
+        }
+      } else {
       if (e.keyCode == 68) {
         char.moving_right = true;
       }
@@ -54,16 +91,18 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           can_place = (stage.map[idx] === 0 && placeable.includes(stage.floor[idx]));
         }
-        if (!can_place && placeable.includes(dict[holding[selected]])) {
+        if (!can_place && placeable.includes(dict[char.holding[selected]])) {
           alert("Can't place here")
         }
-        console.log(dict[holding[selected]])
-        switch(holding[selected]){
+        if(stage.map[idx] === 30) {
+          inshop = true;
+        } else {
+        switch(char.holding[selected]){
           case "":
             if (stage.map[idx] instanceof Seed) {
               if (stage.map[idx].stage === 7) {
-                holding[selected] = stage.map[idx].type.concat(stage.map[idx].stage)
-                holding_amount[selected] += 1
+                char.holding[selected] = stage.map[idx].type.concat(stage.map[idx].stage)
+                char.holding_amount[selected] += 1
                 stage.map[idx] = 0;
               }
             }
@@ -71,20 +110,20 @@ document.addEventListener("DOMContentLoaded", function () {
           case "rock":
             if (block_in_house) {
               if (can_place) {
-                if (holding_amount[selected] >= 1) {
-                  holding_amount[selected] -= 1;
+                if (char.holding_amount[selected] >= 1) {
+                  char.holding_amount[selected] -= 1;
                   stage.house_map[idx] = 50;
-                  if (holding_amount[selected] === 0) {
-                    holding[selected] = "";
+                  if (char.holding_amount[selected] === 0) {
+                    char.holding[selected] = "";
                   }
                 }
               }
             } else {
               if (can_place) {
-                if (holding_amount[selected] >= 1) {
-                  holding_amount[selected] -= 1;
-                  if (holding_amount[selected] === 0) {
-                    holding[selected] = "";
+                if (char.holding_amount[selected] >= 1) {
+                  char.holding_amount[selected] -= 1;
+                  if (char.holding_amount[selected] === 0) {
+                    char.holding[selected] = "";
                   }
                 }
                 stage.map[idx] = 50;
@@ -92,11 +131,11 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             break;
           case "grunk1":
-            if (stage.floor[idx] === 9) {
-              if (holding_amount[selected] >= 1) {
-                holding_amount[selected] -= 1;
-                if (holding_amount[selected] === 0) {
-                  holding[selected] = "";
+            if (stage.floor[idx] === 9 && stage.map[idx] === 0) {
+              if (char.holding_amount[selected] >= 1) {
+                char.holding_amount[selected] -= 1;
+                if (char.holding_amount[selected] === 0) {
+                  char.holding[selected] = "";
                 }
               } 
               let g = new Seed("grunk");
@@ -105,18 +144,18 @@ document.addEventListener("DOMContentLoaded", function () {
             break;
           case "pickaxe":
             if (mineable.includes(stage.map[idx])) {
-              if (holding.includes(getKeyByValue(dict,stage.map[idx]))) {
+              if (char.holding.includes(getKeyByValue(dict,stage.map[idx]))) {
                 let hold_item = getKeyByValue(dict,stage.map[idx])
-                if (holding_amount[holding.indexOf(hold_item)] <= 8){
-                  holding_amount[holding.indexOf(hold_item)] += 1;
+                if (char.holding_amount[char.holding.indexOf(hold_item)] <= 8){
+                  char.holding_amount[char.holding.indexOf(hold_item)] += 1;
                   stage.map[idx] = 0;
-                  console.log(holding_amount)
+                  console.log(char.holding_amount)
                 }
               } else {
-                if (holding.includes("")) {
-                  let new_idx = holding.indexOf("")
-                  holding[new_idx] = getKeyByValue(dict,stage.map[idx])
-                  holding_amount[new_idx] += 1
+                if (char.holding.includes("")) {
+                  let new_idx = char.holding.indexOf("")
+                  char.holding[new_idx] = getKeyByValue(dict,stage.map[idx])
+                  char.holding_amount[new_idx] += 1
                   stage.map[idx] = 0;
                 } else {
                   alert("Inventory is full!")
@@ -125,6 +164,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
             }
         }
+      }
       }
       if (e.keyCode == 49) {
         selected = 0
@@ -141,6 +181,7 @@ document.addEventListener("DOMContentLoaded", function () {
       if (e.keyCode == 53) {
         selected = 4
       }
+    }
     }
 
     function remove_action(e) {
@@ -170,6 +211,9 @@ document.addEventListener("DOMContentLoaded", function () {
     printbar()
     // printblock();
     printnextblock();
+    if (inshop) {
+      shop.print_shop(ctx)
+    }
     window.requestAnimationFrame(updateAll);
   };
 
@@ -221,22 +265,22 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       if (char.moving_right) {
         char.facing = "right";
-        if (walkable.includes(stage.map[next_block_idx]) && inbounds())
+        if (walkable.includes(stage.map[next_block_idx]) && walkable.includes(stage.floor[next_block_idx]) && inbounds()) 
         char.x+=1;
       }
       if (char.moving_left) {
         char.facing = "left"
-        if (walkable.includes(stage.map[next_block_idx]) && inbounds())
+        if (walkable.includes(stage.map[next_block_idx]) && walkable.includes(stage.floor[next_block_idx]) && inbounds())
         char.x-=1;
       }
       if (char.moving_up) {
         char.facing = "up"
-        if (walkable.includes(stage.map[next_block_idx]) && inbounds())
+        if (walkable.includes(stage.map[next_block_idx]) && walkable.includes(stage.floor[next_block_idx]) && inbounds())
         char.y-=1;
       }
       if (char.moving_down) {
         char.facing = "down"
-        if (walkable.includes(stage.map[next_block_idx]) && inbounds())
+        if (walkable.includes(stage.map[next_block_idx]) && walkable.includes(stage.floor[next_block_idx]) && inbounds())
         char.y+=1;
       }
       if (char.moving_up && char.moving_left) {
@@ -274,6 +318,15 @@ document.addEventListener("DOMContentLoaded", function () {
           if(stage.floor[idx] === 9) {
             ctx.drawImage(soil, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
           }
+          if(stage.floor[idx] === 4) {
+            ctx.drawImage(cliff, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          }
+          if(stage.floor[idx] === 5) {
+            ctx.drawImage(sand, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          }
+          if(stage.floor[idx] === 6) {
+            ctx.drawImage(water, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          }
       }
     }
   }
@@ -297,24 +350,35 @@ document.addEventListener("DOMContentLoaded", function () {
         if(stage.map[idx] instanceof Seed) {
           ctx.drawImage(eval(stage.map[idx].type.concat(stage.map[idx].stage)), stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
         }
+        if(stage.map[idx]===30) {
+          ctx.drawImage(shop_guy, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+        }
       }
     }
   }
   }
   const printbar = () => {
-    for (i = 0; i < holding.length; i++) {
+    ctx.drawImage(inv_bar, 0, canvas.width, canvas.width,stage.pixel_size)
+    for (i = 0; i < char.holding.length; i++) {
       if (i === selected) {
         ctx.drawImage(inv_slot, stage.pixel_size * i, canvas.width, stage.pixel_size,stage.pixel_size)
       } else {
         ctx.drawImage(unselected_inv, stage.pixel_size * i, canvas.width, stage.pixel_size,stage.pixel_size)
       }
-      if (holding[i] != "") {
-        ctx.drawImage(eval(holding[i]), (stage.pixel_size * i) + (stage.pixel_size * (1/6)), canvas.width + (stage.pixel_size * (1/6)), stage.pixel_size*(4/6),stage.pixel_size*(4/6))
+      if (char.holding[i] != "") {
+        ctx.drawImage(eval(char.holding[i]), (stage.pixel_size * i) + (stage.pixel_size * (1/6)), canvas.width + (stage.pixel_size * (1/6)), stage.pixel_size*(4/6),stage.pixel_size*(4/6))
       }
-      if (holding_amount[i] > 0) {
-        ctx.drawImage(eval(`num${holding_amount[i]}`), (stage.pixel_size * i) + (stage.pixel_size * (4/6)), canvas.width + (stage.pixel_size * (4/6)), stage.pixel_size*(2/6),stage.pixel_size*(2/6))
+      if (char.holding_amount[i] > 0) {
+        ctx.drawImage(eval(`num${char.holding_amount[i]}`), (stage.pixel_size * i) + (stage.pixel_size * (4/6)), canvas.width + (stage.pixel_size * (4/6)), stage.pixel_size*(2/6),stage.pixel_size*(2/6))
       }
     }
+    ctx.font = "italic 30px brush script mt";
+    ctx.fillStyle = "#b3b300";
+    ctx.fillText(`$${char.money}`, stage.pixel_size * char.holding.length, canvas.width + (stage.pixel_size)/2);
+    ctx.font = "normal 18px fantasy";
+    ctx.fillStyle = "black";
+    ctx.fillText(`${char.holding[selected]}`, stage.pixel_size * (char.holding.length+1), canvas.width + (stage.pixel_size)/2);
+    ctx.fillText(`${stage.hours}:${stage.minutes < 10 ? `0${stage.minutes}` : stage.minutes}`, stage.pixel_size * (char.holding.length+4), canvas.width + (stage.pixel_size)/2);
   }
 
   const nextpix = () => {
@@ -430,11 +494,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const printnextblock = () => {
-    if (holding[selected] != ""){
+    if (char.holding[selected] != ""){
       let next_block = nextblockcheck(char.x,char.y);
       if (next_block[0] < 10 && next_block[1] < 10) {
         ctx.globalAlpha = 0.5;
-        ctx.drawImage(eval(holding[selected]), stage.pixel_size * next_block[0], stage.pixel_size* next_block[1], stage.pixel_size, stage.pixel_size);
+        ctx.drawImage(eval(char.holding[selected]), stage.pixel_size * next_block[0], stage.pixel_size* next_block[1], stage.pixel_size, stage.pixel_size);
         ctx.globalAlpha = 1.0;
       }
     }

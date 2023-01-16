@@ -111,3 +111,15 @@
   num9.src = "./images/num9.png"
   const pickaxe = new Image(tWidth,tWidth);
   pickaxe.src = "./images/pickaxe.png"
+  const inv_bar = new Image(tWidth,tWidth);
+  inv_bar.src = "./images/inv_bar.png"
+  const cliff = new Image(tWidth,tWidth);
+  cliff.src = "./images/cliff.png"
+  const water = new Image(tWidth,tWidth);
+  water.src = "./images/water.png"
+  const sand = new Image(tWidth,tWidth);
+  sand.src = "./images/sand.png"
+  const shop_guy = new Image(tWidth,tWidth);
+  shop_guy.src = "./images/shop.png"
+  const shop_items = new Image(tWidth,tWidth);
+  shop_items.src = "./images/shop_items.png"
