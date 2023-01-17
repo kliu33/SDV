@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", function () {
   const walkable = [0, 4, 5, 9, 27];
   const mineable = [50];
   const placeable = [0, 4, 5, 1, 50];
+  const one_of = ["pickaxe", "bucket"];
   let inshop = false;
 
   const dict = {
@@ -22,8 +23,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const char = new Char(419,277);
     const stage = new Map();
     const shop = new Shop(char);
-    let selected = 0;
-
+    const global_bucket = new Bucket();
     function inhouse (x,y) {
       return x > 270 && y < 270
     }
@@ -35,21 +35,23 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         
         if (e.keyCode == 87) {
-          if (shop.selected != 0) {
-            shop.selected -= 1
+          if (shop.selection != 0) {
+            shop.selection -= 1
           }
         }
         if (e.keyCode == 83) {
-          if (shop.selected != shop.items.length - 1) {
-            shop.selected += 1
+          if (shop.selection != shop.items.length - 1) {
+            shop.selection += 1
           }
         }
         if (e.keyCode == 32) {
           e.preventDefault();
-          let item = shop.items[shop.selected]
-          let price = shop.items_price[shop.items[shop.selected]];
+          let item = shop.items[shop.selection]
+          let price = shop.items_buy_price[item];
           if (char.money >= price) {
-              if (char.holding.includes(item) && char.holding_amount[char.holding.indexOf(item)] <= 8) {
+              if (char.holding.includes(item) && one_of.includes(item)) {
+                alert("Can only have one of this item!")
+              } else if (char.holding.includes(item) && char.holding_amount[char.holding.indexOf(item)] <= 8) {
                 char.money -= price
                 char.holding_amount[char.holding.indexOf(item)] += 1
               } else if (char.holding.includes(item) && char.holding_amount[char.holding.indexOf(item)] === 9) {
@@ -58,7 +60,7 @@ document.addEventListener("DOMContentLoaded", function () {
                 char.money -= price
                 let new_idx2 = char.holding.indexOf("")
                 char.holding[new_idx2] = item
-                char.holding_amount[new_idx] += 1
+                char.holding_amount[new_idx2] += 1
               } else {
                 alert("Inventory is full!")
               }
@@ -91,18 +93,32 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           can_place = (stage.map[idx] === 0 && placeable.includes(stage.floor[idx]));
         }
-        if (!can_place && placeable.includes(dict[char.holding[selected]])) {
-          alert("Can't place here")
-        }
+        
         if(stage.map[idx] === 30) {
-          inshop = true;
+          if(char.holding[char.selected] == ""){
+            inshop = true;
+          } else if (char.holding[char.selected] in shop.items_sell_price) {
+            let price2 = shop.items_sell_price[char.holding[char.selected]];
+            console.log(price2)
+            char.money += price2;
+            if (char.holding_amount[char.selected] > 1) {
+              char.holding_amount[char.selected] -= 1;
+            } else {
+              char.holding_amount[char.selected] = 0;
+              char.holding[char.selected] = "";
+            }
+          } else {
+            alert("Can't sell this item")
+          }
+        } else if (!can_place && placeable.includes(dict[char.holding[char.selected]])) {
+          alert("Can't place here")
         } else {
-        switch(char.holding[selected]){
+        switch(char.holding[char.selected]){
           case "":
             if (stage.map[idx] instanceof Seed) {
               if (stage.map[idx].stage === 7) {
-                char.holding[selected] = stage.map[idx].type.concat(stage.map[idx].stage)
-                char.holding_amount[selected] += 1
+                char.holding[char.selected] = stage.map[idx].type.concat(stage.map[idx].stage)
+                char.holding_amount[char.selected] += 1
                 stage.map[idx] = 0;
               }
             }
@@ -110,20 +126,20 @@ document.addEventListener("DOMContentLoaded", function () {
           case "rock":
             if (block_in_house) {
               if (can_place) {
-                if (char.holding_amount[selected] >= 1) {
-                  char.holding_amount[selected] -= 1;
+                if (char.holding_amount[char.selected] >= 1) {
+                  char.holding_amount[char.selected] -= 1;
                   stage.house_map[idx] = 50;
-                  if (char.holding_amount[selected] === 0) {
-                    char.holding[selected] = "";
+                  if (char.holding_amount[char.selected] === 0) {
+                    char.holding[char.selected] = "";
                   }
                 }
               }
             } else {
               if (can_place) {
-                if (char.holding_amount[selected] >= 1) {
-                  char.holding_amount[selected] -= 1;
-                  if (char.holding_amount[selected] === 0) {
-                    char.holding[selected] = "";
+                if (char.holding_amount[char.selected] >= 1) {
+                  char.holding_amount[char.selected] -= 1;
+                  if (char.holding_amount[char.selected] === 0) {
+                    char.holding[char.selected] = "";
                   }
                 }
                 stage.map[idx] = 50;
@@ -132,10 +148,10 @@ document.addEventListener("DOMContentLoaded", function () {
             break;
           case "grunk1":
             if (stage.floor[idx] === 9 && stage.map[idx] === 0) {
-              if (char.holding_amount[selected] >= 1) {
-                char.holding_amount[selected] -= 1;
-                if (char.holding_amount[selected] === 0) {
-                  char.holding[selected] = "";
+              if (char.holding_amount[char.selected] >= 1) {
+                char.holding_amount[char.selected] -= 1;
+                if (char.holding_amount[char.selected] === 0) {
+                  char.holding[char.selected] = "";
                 }
               } 
               let g = new Seed("grunk");
@@ -163,23 +179,32 @@ document.addEventListener("DOMContentLoaded", function () {
               }
 
             }
+            break;
+          case "bucket": 
+            console.log(stage.map[idx])
+            if (stage.map[idx] instanceof Seed) {
+              stage.map[idx].water();
+              global_bucket.use();
+            } else if (stage.floor[idx] == 6){ 
+              global_bucket.fill();
+            }
         }
       }
       }
       if (e.keyCode == 49) {
-        selected = 0
+        char.selected = 0
       }
       if (e.keyCode == 50) {
-        selected = 1
+        char.selected = 1
       }
       if (e.keyCode == 51) {
-        selected = 2
+        char.selected = 2
       }
       if (e.keyCode == 52) {
-        selected = 3
+        char.selected = 3
       }
       if (e.keyCode == 53) {
-        selected = 4
+        char.selected = 4
       }
     }
     }
@@ -198,8 +223,6 @@ document.addEventListener("DOMContentLoaded", function () {
         char.moving_down = false;
       }
     }
-
-  
 
   const updateAll = () => {
     document.onkeydown = add_action;
@@ -348,7 +371,19 @@ document.addEventListener("DOMContentLoaded", function () {
           ctx.drawImage(eval(`house${stage.map[idx]-4}`), stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
         }
         if(stage.map[idx] instanceof Seed) {
-          ctx.drawImage(eval(stage.map[idx].type.concat(stage.map[idx].stage)), stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          if (!stage.map[idx].life) {
+            stage.map[idx] = 0
+          } else {
+            ctx.drawImage(eval(stage.map[idx].type.concat(stage.map[idx].stage)), stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+            ctx.beginPath();
+            ctx.arc((stage.pixel_size * j) + 15, (stage.pixel_size * i) + 15, 10, 0, 2 * Math.PI);
+            ctx.fillStyle = 'black';
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc((stage.pixel_size * j) + 15, (stage.pixel_size * i) + 15, 10, 0, (2 * Math.PI) * (stage.map[idx].water_level/100), false);
+            ctx.fillStyle = 'blue';
+            ctx.fill();
+          }
         }
         if(stage.map[idx]===30) {
           ctx.drawImage(shop_guy, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
@@ -360,15 +395,20 @@ document.addEventListener("DOMContentLoaded", function () {
   const printbar = () => {
     ctx.drawImage(inv_bar, 0, canvas.width, canvas.width,stage.pixel_size)
     for (i = 0; i < char.holding.length; i++) {
-      if (i === selected) {
+      if (i === char.selected) {
         ctx.drawImage(inv_slot, stage.pixel_size * i, canvas.width, stage.pixel_size,stage.pixel_size)
       } else {
         ctx.drawImage(unselected_inv, stage.pixel_size * i, canvas.width, stage.pixel_size,stage.pixel_size)
       }
       if (char.holding[i] != "") {
         ctx.drawImage(eval(char.holding[i]), (stage.pixel_size * i) + (stage.pixel_size * (1/6)), canvas.width + (stage.pixel_size * (1/6)), stage.pixel_size*(4/6),stage.pixel_size*(4/6))
+        if (char.holding[i] == "bucket") {
+          ctx.font = "bold 20px brush script mt";
+          ctx.fillStyle = "black";
+          ctx.fillText(`${global_bucket.level}%`, (stage.pixel_size * i) + (stage.pixel_size * (1/6)), canvas.width + (stage.pixel_size * (1/3)));
+        }
       }
-      if (char.holding_amount[i] > 0) {
+      if (char.holding_amount[i] > 1) {
         ctx.drawImage(eval(`num${char.holding_amount[i]}`), (stage.pixel_size * i) + (stage.pixel_size * (4/6)), canvas.width + (stage.pixel_size * (4/6)), stage.pixel_size*(2/6),stage.pixel_size*(2/6))
       }
     }
@@ -377,7 +417,7 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.fillText(`$${char.money}`, stage.pixel_size * char.holding.length, canvas.width + (stage.pixel_size)/2);
     ctx.font = "normal 18px fantasy";
     ctx.fillStyle = "black";
-    ctx.fillText(`${char.holding[selected]}`, stage.pixel_size * (char.holding.length+1), canvas.width + (stage.pixel_size)/2);
+    ctx.fillText(`${char.holding[char.selected]}`, stage.pixel_size * (char.holding.length+1), canvas.width + (stage.pixel_size)/2);
     ctx.fillText(`${stage.hours}:${stage.minutes < 10 ? `0${stage.minutes}` : stage.minutes}`, stage.pixel_size * (char.holding.length+4), canvas.width + (stage.pixel_size)/2);
   }
 
@@ -441,7 +481,7 @@ document.addEventListener("DOMContentLoaded", function () {
           next_y -= 1;
           break;
         case "down_left":
-          next_x -= 1;
+          next_x -= 1;4
           next_y += 1;
           break;
         case "down_right":
@@ -494,11 +534,11 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   const printnextblock = () => {
-    if (char.holding[selected] != ""){
+    if (char.holding[char.selected] != ""){
       let next_block = nextblockcheck(char.x,char.y);
       if (next_block[0] < 10 && next_block[1] < 10) {
         ctx.globalAlpha = 0.5;
-        ctx.drawImage(eval(char.holding[selected]), stage.pixel_size * next_block[0], stage.pixel_size* next_block[1], stage.pixel_size, stage.pixel_size);
+        ctx.drawImage(eval(char.holding[char.selected]), stage.pixel_size * next_block[0], stage.pixel_size* next_block[1], stage.pixel_size, stage.pixel_size);
         ctx.globalAlpha = 1.0;
       }
     }

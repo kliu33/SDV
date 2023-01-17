@@ -12,6 +12,7 @@ class Char {
         this.moving_up = false;
         this.holding = ["rock","grunk1","pickaxe","",""];
         this.holding_amount = [5,2,0,0,0];
+        this.selected = 0;
     }
 
     printchar(ctx) {
