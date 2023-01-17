@@ -18,32 +18,26 @@ class FishingRod {
             if (char.holding.includes("")){ 
                 this.durability -= 10;
                 let roll = Math.floor(Math.random() * 101);
+                let caught;
                 if (roll < 30) {
-                    let caught = this.trash[Math.floor(Math.random()*this.trash.length)]
-                    alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.additem(caught)
+                    caught = this.trash[Math.floor(Math.random()*this.trash.length)]
                 } else if (roll < 50) {
-                    let caught = this.fishes1[Math.floor(Math.random()*this.fishes1.length)]
-                    alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.additem(caught)
+                    caught = this.fishes1[Math.floor(Math.random()*this.fishes1.length)]
                 } else if (roll < 70) {
-                    let caught = this.fishes2[Math.floor(Math.random()*this.fishes2.length)]
-                    alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.additem(caught)
+                    caught = this.fishes2[Math.floor(Math.random()*this.fishes2.length)]
                 } else if (roll < 90) {
-                    let caught = this.fishes3[Math.floor(Math.random()*this.fishes3.length)]
-                    alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.additem(caught)
+                    caught = this.fishes3[Math.floor(Math.random()*this.fishes3.length)]
                 } else if (roll < 99) {
-                    let caught = this.fishes4[Math.floor(Math.random()*this.fishes4.length)]
-                    alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.additem(caught)
+                    caught = this.fishes4[Math.floor(Math.random()*this.fishes4.length)]
                 } else {
-                    let caught = this.fishes5[Math.floor(Math.random()*this.fishes5.length)]
-                    alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.additem(caught)
+                    caught = this.fishes5[Math.floor(Math.random()*this.fishes5.length)]
                 }
-            } 
+                
+                alert(`(${roll}), you caught a ${caught}!`)
+                char.additem(caught)
+            } else {
+                alert("Inventory is full")
+            }
         }else {
             alert("Fishing Rod is broken")
         }
