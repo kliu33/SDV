@@ -183,8 +183,9 @@ document.addEventListener("DOMContentLoaded", function () {
           case "bucket": 
             console.log(stage.map[idx])
             if (stage.map[idx] instanceof Seed) {
-              stage.map[idx].water();
-              global_bucket.use();
+              if (global_bucket.use()) {
+                stage.map[idx].water();
+              }
             } else if (stage.floor[idx] == 6){ 
               global_bucket.fill();
             }
@@ -384,7 +385,11 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.fill();
             ctx.beginPath();
             ctx.arc((stage.pixel_size * j) + 15, (stage.pixel_size * i) + 15, 10, 0, (2 * Math.PI) * (stage.map[idx].water_level/100), false);
-            ctx.fillStyle = 'blue';
+            if (stage.map[idx].water_level > 40) {
+              ctx.fillStyle = 'blue';
+            } else {
+              ctx.fillStyle = 'brown';
+            }
             ctx.fill();
           }
         }

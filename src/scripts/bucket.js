@@ -1,5 +1,7 @@
 class Bucket {
     constructor () {
+        this.power = 10;
+        this.size = 100;
         this.level = 100;
     }
 
@@ -10,8 +12,10 @@ class Bucket {
     use() {
         if (this.level >= 10) {
             this.level -= 10;
+            return true;
         } else {
             alert("Bucket is empty")
+            return false;
         }
     }
 }
