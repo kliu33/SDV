@@ -225,19 +225,22 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
   const updateAll = () => {
-    document.onkeydown = add_action;
-    document.onkeyup = remove_action;
-    move();
-    printlayer1();
-    printlayer2();
-    char.printchar(ctx);
-    printbar()
-    // printblock();
-    printnextblock();
-    if (inshop) {
-      shop.print_shop(ctx)
-    }
-    window.requestAnimationFrame(updateAll);
+    if (char.alive) {
+      document.onkeydown = add_action;
+      document.onkeyup = remove_action;
+      move();
+      printlayer1();
+      printlayer2();
+      char.printchar(ctx);
+      printbar()
+      // printblock();
+      printnextblock();
+      if (inshop) {
+        shop.print_shop(ctx)
+      }
+      window.requestAnimationFrame(updateAll);
+    } 
+    // else print dead screen
   };
 
   window.onload = () => {

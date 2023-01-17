@@ -4,8 +4,9 @@ class Char {
         this.x = x;
         this.y = y;
         this.money = 200;
-        this.hunger = 5;
+        this.hunger = 100;
         this.facing= "down";
+        this.alive = true;
         this.moving_right = false;
         this.moving_left = false;
         this.moving_down = false;
@@ -13,6 +14,7 @@ class Char {
         this.holding = ["rock","grunk1","pickaxe","",""];
         this.holding_amount = [5,2,0,0,0];
         this.selected = 0;
+        setInterval(this.hungry.bind(this), 5000);
     }
 
     printchar(ctx) {
@@ -41,5 +43,22 @@ class Char {
           case "down_right":
             ctx.drawImage(char_down_right, this.x, this.y, tWidth, tWidth);
         }
+          ctx.beginPath();
+          ctx.arc(this.x, this.y + 15, 10, 0, 2 * Math.PI);
+          ctx.fillStyle = 'black';
+          ctx.fill();
+          ctx.beginPath();
+          ctx.arc(this.x, this.y + 15, 10, 0, (2 * Math.PI) * (this.hunger/100), false);
+          ctx.fillStyle = `#${this.hunger < 50 ? 255 : (51 + Math.floor(((100-this.hunger) / 100) * 204)).toString(16)}${(this.hunger >= 50 ? 255 : 51 + Math.floor(((this.hunger) / 100) * 204)).toString(16)}51`;
+          ctx.fill();
       }
+
+    hungry() {
+      if (this.alive) {
+        this.hunger -= 1
+        if (this.hunger <= 0) {
+          this.alive = false
+        }
+      }
+    }
 }
