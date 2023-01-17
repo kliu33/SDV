@@ -24,6 +24,7 @@ document.addEventListener("DOMContentLoaded", function () {
     const stage = new Map();
     const shop = new Shop(char);
     const global_bucket = new Bucket();
+    const global_rod = new FishingRod();
     function inhouse (x,y) {
       return x > 270 && y < 270
     }
@@ -99,7 +100,6 @@ document.addEventListener("DOMContentLoaded", function () {
             inshop = true;
           } else if (char.holding[char.selected] in shop.items_sell_price) {
             let price2 = shop.items_sell_price[char.holding[char.selected]];
-            console.log(price2)
             char.money += price2;
             if (char.holding_amount[char.selected] > 1) {
               char.holding_amount[char.selected] -= 1;
@@ -165,7 +165,6 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (char.holding_amount[char.holding.indexOf(hold_item)] <= 8){
                   char.holding_amount[char.holding.indexOf(hold_item)] += 1;
                   stage.map[idx] = 0;
-                  console.log(char.holding_amount)
                 }
               } else {
                 if (char.holding.includes("")) {
@@ -181,13 +180,19 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             break;
           case "bucket": 
-            console.log(stage.map[idx])
             if (stage.map[idx] instanceof Seed) {
               if (global_bucket.use()) {
                 stage.map[idx].water();
               }
             } else if (stage.floor[idx] == 6){ 
               global_bucket.fill();
+            }
+            break;
+          case "fishing_rod":
+            if (stage.floor[idx] === 6) {
+              global_rod.use(char);
+            } else {
+              alert("Cannot fish here")
             }
         }
       }
@@ -415,6 +420,11 @@ document.addEventListener("DOMContentLoaded", function () {
           ctx.font = "bold 20px brush script mt";
           ctx.fillStyle = "black";
           ctx.fillText(`${global_bucket.level}%`, (stage.pixel_size * i) + (stage.pixel_size * (1/6)), canvas.width + (stage.pixel_size * (1/3)));
+        }
+        if (char.holding[i] == "fishing_rod") {
+          ctx.font = "bold 20px brush script mt";
+          ctx.fillStyle = "black";
+          ctx.fillText(`${global_rod.durability}%`, (stage.pixel_size * i) + (stage.pixel_size * (1/6)), canvas.width + (stage.pixel_size * (1/3)));
         }
       }
       if (char.holding_amount[i] > 1) {

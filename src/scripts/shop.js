@@ -1,19 +1,43 @@
 class Shop {
     constructor(char) {
+        this.fish_price = [5, 20, 30, 50, 75, 100, 1000]
         this.char = char
-        this.items = ["grunk1", "pickaxe", "rock","bucket"]
+        this.items = ["grunk1", "pickaxe", "rock","bucket", "fishing_rod"]
         this.items_buy_price = {
             "grunk1" : 30,
             "pickaxe" : 50,
             "rock" : 10,
-            "bucket" : 100
+            "bucket" : 100,
+            "fishing_rod": 200
         }
         this.items_sell_price = {
           "grunk1" : 15,
           "pickaxe" : 25,
           "rock" : 5,
           "grunk7" : 70,
-          "bucket" : 50
+          "bucket" : 50,
+          "fishing_rod": 200,
+          "searock": this.fish_price[0],
+          "clam": this.fish_price[0],
+          "kelp": this.fish_price[0],
+          "anchovy": this.fish_price[1],
+          "sardine": this.fish_price[1],
+          "shad": this.fish_price[1],
+          "salmon": this.fish_price[2],
+          "carp": this.fish_price[2],
+          "catfish": this.fish_price[2],
+          "tuna": this.fish_price[4],
+          "octopus": this.fish_price[4],
+          "seacucumber": this.fish_price[4],
+          "squid": this.fish_price[4],
+          "sturgeon": this.fish_price[5],
+          "rainbowtrout": this.fish_price[5],
+          "supercucumber": this.fish_price[5],
+          "pufferfish": this.fish_price[5],
+          "legend": this.fish_price[6],
+          "crimsonfish": this.fish_price[6],
+          "angler": this.fish_price[6]
+
         }
         this.selection = 0;
     }
