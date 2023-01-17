@@ -11,8 +11,8 @@ class Char {
         this.moving_left = false;
         this.moving_down = false;
         this.moving_up = false;
-        this.holding = ["rock","grunk1","pickaxe","",""];
-        this.holding_amount = [5,2,1,0,0];
+        this.holding = ["","","","",""];
+        this.holding_amount = [0,0,0,0,0];
         this.selected = 0;
         setInterval(this.hungry.bind(this), 5000);
     }

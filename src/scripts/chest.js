@@ -43,10 +43,11 @@ class Chest {
 
     takeitem(char){
         if (this.contents[this.selection] != "") {
-            char.additem(this.contents[this.selection])
-            this.contents_amount[this.selection] -= 1;
-            if (this.contents_amount[this.selection] === 0) {
-                this.contents[this.selection] = ""
+            if (char.additem(this.contents[this.selection])) {
+                this.contents_amount[this.selection] -= 1;
+                if (this.contents_amount[this.selection] === 0) {
+                    this.contents[this.selection] = ""
+                }
             }
         }
     }
