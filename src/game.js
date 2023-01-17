@@ -2,9 +2,6 @@ document.addEventListener("DOMContentLoaded", function () {
   const canvas = document.getElementById("game-canvas");
   const ctx = canvas.getContext("2d");
 
-  const walkable = [0, 4, 5, 9, 27];
-  const mineable = [50];
-  const placeable = [0, 4, 5, 1, 50];
   const one_of = ["pickaxe", "bucket", "fishing_rod"];
 
   const char = new Char(419,277); //STARTING LOCATION FOR CHARACTER
@@ -15,14 +12,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
   let currentchest;
   let inshop = false;
-
-  const dict = {
-    "rock": 50,
-    "grass": 0,
-    "wood": 1,
-    "black": -1,
-    "pickaxe": 101
-  };
 
   function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
@@ -94,7 +83,6 @@ document.addEventListener("DOMContentLoaded", function () {
         if (e.keyCode == 27) {
           inshop = false;
         }
-        
         if (e.keyCode == 87) {
           if (shop.selection != 0) {
             shop.selection -= 1
@@ -113,6 +101,7 @@ document.addEventListener("DOMContentLoaded", function () {
               if (char.holding.includes(item) && one_of.includes(item)) {
                 alert("Can only have one of this item!")
               } else {
+                char.money-=price;
                 char.additem(item)
               }
             }  else {
@@ -143,9 +132,9 @@ document.addEventListener("DOMContentLoaded", function () {
         let block_in_house = inhouse(next_pix4[0], next_pix4[1])
         let can_place;
         if (block_in_house){
-          can_place = (stage.house_map[idx] === 0 && placeable.includes(stage.house_floor[idx]));
+          can_place = (stage.house_map[idx] === 0 && stage.placeable.includes(stage.house_floor[idx]));
         } else {
-          can_place = (stage.map[idx] === 0 && placeable.includes(stage.floor[idx]));
+          can_place = (stage.map[idx] === 0 && stage.placeable.includes(stage.floor[idx]));
         } 
         if (block_in_house && stage.house_map[idx] instanceof Chest && char.holding[char.selected] != ""){ 
           stage.house_map[idx].additem(char, char.holding[char.selected])
@@ -161,7 +150,7 @@ document.addEventListener("DOMContentLoaded", function () {
           } else {
             alert("Can't sell this item")
           }
-        } else if (!can_place && placeable.includes(dict[char.holding[char.selected]])) {
+        } else if (!can_place && stage.placeable.includes(stage.dict[char.holding[char.selected]])) {
           alert("Can't place here")
         } else {
         switch(char.holding[char.selected]){
@@ -200,13 +189,13 @@ document.addEventListener("DOMContentLoaded", function () {
             break;
           case "pickaxe":
             if (block_in_house) {
-              if (mineable.includes(stage.house_map[idx])) {
-                char.additem(getKeyByValue(dict,stage.house_map[idx]))
+              if (stage.mineable.includes(stage.house_map[idx])) {
+                char.additem(getKeyByValue(stage.dict,stage.house_map[idx]))
                 stage.house_map[idx] = 0;
               }
             } else {
-            if (mineable.includes(stage.map[idx])) {
-              char.additem(getKeyByValue(dict,stage.map[idx]))
+            if (stage.mineable.includes(stage.map[idx])) {
+              char.additem(getKeyByValue(stage.dict,stage.map[idx]))
               stage.map[idx] = 0;
             } 
           }
@@ -240,8 +229,8 @@ document.addEventListener("DOMContentLoaded", function () {
                 stage.map[idx] = new Chest;
               }
             }
+          }
         }
-      }
       }
       if (e.keyCode == 49) {
         char.selected = 0
@@ -284,17 +273,17 @@ document.addEventListener("DOMContentLoaded", function () {
       let next_pixel_x_y = nextpix();
       if (char.moving_right) {
         char.facing = "right";
-        if (walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1])  && inbounds())
+        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1])  && inbounds())
         char.x+=1;
       }
       if (char.moving_left) {
         char.facing = "left"
-        if (walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
+        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
         char.x-=1;
       }
       if (char.moving_up) {
         char.facing = "up"
-        if (walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
+        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
         char.y-=1;
       }
       if (char.moving_down) {
@@ -302,7 +291,7 @@ document.addEventListener("DOMContentLoaded", function () {
         if (stage.house_map[next_block_idx] === 1) {
           char.y+=1;
         }
-        if (walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
+        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
         char.y+=1;
       }
       if (char.moving_up && char.moving_left) {
@@ -320,22 +309,22 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       if (char.moving_right) {
         char.facing = "right";
-        if (walkable.includes(stage.map[next_block_idx]) && walkable.includes(stage.floor[next_block_idx]) && inbounds()) 
+        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds()) 
         char.x+=1;
       }
       if (char.moving_left) {
         char.facing = "left"
-        if (walkable.includes(stage.map[next_block_idx]) && walkable.includes(stage.floor[next_block_idx]) && inbounds())
+        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds())
         char.x-=1;
       }
       if (char.moving_up) {
         char.facing = "up"
-        if (walkable.includes(stage.map[next_block_idx]) && walkable.includes(stage.floor[next_block_idx]) && inbounds())
+        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds())
         char.y-=1;
       }
       if (char.moving_down) {
         char.facing = "down"
-        if (walkable.includes(stage.map[next_block_idx]) && walkable.includes(stage.floor[next_block_idx]) && inbounds())
+        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds())
         char.y+=1;
       }
       if (char.moving_up && char.moving_left) {
@@ -419,7 +408,7 @@ document.addEventListener("DOMContentLoaded", function () {
               ctx.beginPath();
               ctx.arc((stage.pixel_size * j) + 15, (stage.pixel_size * i) + 15, 10, 0, (2 * Math.PI) * (stage.map[idx].water_level/100), false);
               if (stage.map[idx].water_level > 40) {
-                ctx.fillStyle = 'blue';
+                ctx.fillStyle = '#33ccff';
               } else {
                 ctx.fillStyle = 'brown';
               }

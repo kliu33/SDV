@@ -1,10 +1,20 @@
 class Map {
     constructor() {
+        this.walkable = [0, 4, 5, 9, 27];
+        this.mineable = [50];
+        this.placeable = [0, 4, 5, 1, 50];
         this.pixel_size = 60;
         this.rows = 10;
         this.cols = 10;
         this.hours = 7;
         this.minutes = 0;
+        this.dict = {
+          "rock": 50,
+          "grass": 0,
+          "wood": 1,
+          "black": -1,
+          "pickaxe": 101
+        }
         this.floor = [
             0,0,0,0,0,0,0,0,0,0,
             0,9,9,9,0,0,0,0,0,0,
