@@ -21,31 +21,29 @@ class FishingRod {
                 if (roll < 30) {
                     let caught = this.trash[Math.floor(Math.random()*this.trash.length)]
                     alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.holding[char.holding.indexOf("")] = caught
+                    char.additem(caught)
                 } else if (roll < 50) {
                     let caught = this.fishes1[Math.floor(Math.random()*this.fishes1.length)]
                     alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.holding[char.holding.indexOf("")] = caught
+                    char.additem(caught)
                 } else if (roll < 70) {
                     let caught = this.fishes2[Math.floor(Math.random()*this.fishes2.length)]
                     alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.holding[char.holding.indexOf("")] = caught
+                    char.additem(caught)
                 } else if (roll < 90) {
                     let caught = this.fishes3[Math.floor(Math.random()*this.fishes3.length)]
                     alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.holding[char.holding.indexOf("")] = caught
+                    char.additem(caught)
                 } else if (roll < 99) {
                     let caught = this.fishes4[Math.floor(Math.random()*this.fishes4.length)]
                     alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.holding[char.holding.indexOf("")] = caught
+                    char.additem(caught)
                 } else {
                     let caught = this.fishes5[Math.floor(Math.random()*this.fishes5.length)]
                     alert(`You rolled a ${roll}, and you caught a ${caught}!`)
-                    char.holding[char.holding.indexOf("")] = caught
+                    char.additem(caught)
                 }
-            } else (
-                alert("Make some space in your inventory")
-            )
+            } 
         }else {
             alert("Fishing Rod is broken")
         }

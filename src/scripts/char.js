@@ -12,9 +12,38 @@ class Char {
         this.moving_down = false;
         this.moving_up = false;
         this.holding = ["rock","grunk1","pickaxe","",""];
-        this.holding_amount = [5,2,0,0,0];
+        this.holding_amount = [5,2,1,0,0];
         this.selected = 0;
         setInterval(this.hungry.bind(this), 5000);
+    }
+
+    additem(item) {
+      if (this.holding.includes(item)) {
+        if (this.holding_amount[this.holding.indexOf(item)] < 9) {
+          this.holding_amount[this.holding.indexOf(item)] += 1;
+          return true
+        } else {
+          alert("Cant hold anymore of this item")
+          return false
+        }
+      } else if (this.holding.includes("")) {
+        let index9 = this.holding.indexOf("");
+        this.holding[index9] = item;
+        this.holding_amount[index9] += 1;
+        return true
+      } else {
+        alert("Inventory is full")
+        return false
+      }
+    }
+
+    dropitem() {
+      if (this.holding_amount[this.selected] > 0) {
+        this.holding_amount[this.selected] -= 1
+        if (this.holding_amount[this.selected] === 0) {
+          this.holding[this.selected] = "";
+        }
+      }
     }
 
     printchar(ctx) {

@@ -6,7 +6,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const walkable = [0, 4, 5, 9, 27];
   const mineable = [50];
   const placeable = [0, 4, 5, 1, 50];
-  const one_of = ["pickaxe", "bucket"];
+  const one_of = ["pickaxe", "bucket", "fishing_rod"];
+  let currentchest;
   let inshop = false;
 
   const dict = {
@@ -30,7 +31,38 @@ document.addEventListener("DOMContentLoaded", function () {
     }
 
     function add_action(e) {
-      if (inshop) {
+      if (currentchest instanceof Chest) {
+        let len = currentchest.contents.length;
+        if (e.keyCode == 27) {
+          currentchest = "";
+        }
+        if (e.keyCode == 65) {
+          if (currentchest.selection != 0) {
+            if (currentchest.selection != (len/2)){
+              currentchest.selection -= 1
+            }
+          }
+        }
+        if (e.keyCode == 68) {
+          if (currentchest.selection != ((len/2)-1) && currentchest.selection != len-1){
+            currentchest.selection += 1
+          }
+        }
+        if (e.keyCode == 83) {
+            if (currentchest.selection <= 5) {
+              currentchest.selection += 6
+            }
+        }
+        if (e.keyCode == 87) {
+            if (currentchest.selection >5){
+              currentchest.selection -= 6
+            }
+        }
+        if (e.keyCode == 32) {
+          e.preventDefault();
+          currentchest.takeitem(char)
+      }
+      } else if (inshop) {
         if (e.keyCode == 27) {
           inshop = false;
         }
@@ -52,18 +84,8 @@ document.addEventListener("DOMContentLoaded", function () {
           if (char.money >= price) {
               if (char.holding.includes(item) && one_of.includes(item)) {
                 alert("Can only have one of this item!")
-              } else if (char.holding.includes(item) && char.holding_amount[char.holding.indexOf(item)] <= 8) {
-                char.money -= price
-                char.holding_amount[char.holding.indexOf(item)] += 1
-              } else if (char.holding.includes(item) && char.holding_amount[char.holding.indexOf(item)] === 9) {
-                alert("Cant hold anymore of this item")
-              } else if (char.holding.includes("")) {
-                char.money -= price
-                let new_idx2 = char.holding.indexOf("")
-                char.holding[new_idx2] = item
-                char.holding_amount[new_idx2] += 1
               } else {
-                alert("Inventory is full!")
+                char.additem(item)
               }
             }  else {
             alert("Not enough money")
@@ -82,6 +104,9 @@ document.addEventListener("DOMContentLoaded", function () {
       if (e.keyCode == 83) {
         char.moving_down = true
       }
+      if (e.keyCode == 8) {
+        char.dropitem();
+      }
       if (e.keyCode == 32) {
         e.preventDefault();
         let next_block = nextblockcheck(char.x,char.y);
@@ -93,20 +118,18 @@ document.addEventListener("DOMContentLoaded", function () {
           can_place = (stage.house_map[idx] === 0 && placeable.includes(stage.house_floor[idx]));
         } else {
           can_place = (stage.map[idx] === 0 && placeable.includes(stage.floor[idx]));
-        }
-        
-        if(stage.map[idx] === 30) {
+        } 
+        if (block_in_house && stage.house_map[idx] instanceof Chest && char.holding[char.selected] != ""){ 
+          stage.house_map[idx].additem(char, char.holding[char.selected])
+        } else if (!block_in_house && stage.map[idx] instanceof Chest && char.holding[char.selected] != "") {
+          stage.map[idx].additem(char, char.holding[char.selected])
+        } else if(stage.map[idx] === 30) {
           if(char.holding[char.selected] == ""){
             inshop = true;
           } else if (char.holding[char.selected] in shop.items_sell_price) {
             let price2 = shop.items_sell_price[char.holding[char.selected]];
             char.money += price2;
-            if (char.holding_amount[char.selected] > 1) {
-              char.holding_amount[char.selected] -= 1;
-            } else {
-              char.holding_amount[char.selected] = 0;
-              char.holding[char.selected] = "";
-            }
+            char.dropitem();
           } else {
             alert("Can't sell this item")
           }
@@ -121,63 +144,44 @@ document.addEventListener("DOMContentLoaded", function () {
                 char.holding_amount[char.selected] += 1
                 stage.map[idx] = 0;
               }
+            } else if (stage.map[idx] instanceof Chest){
+              currentchest = stage.map[idx]
+            } else if (stage.house_map[idx] instanceof Chest) {
+              currentchest = stage.house_map[idx]
             }
             break;
           case "rock":
             if (block_in_house) {
               if (can_place) {
-                if (char.holding_amount[char.selected] >= 1) {
-                  char.holding_amount[char.selected] -= 1;
-                  stage.house_map[idx] = 50;
-                  if (char.holding_amount[char.selected] === 0) {
-                    char.holding[char.selected] = "";
-                  }
-                }
+                char.dropitem();
+                stage.house_map[idx] = 50;
               }
             } else {
               if (can_place) {
-                if (char.holding_amount[char.selected] >= 1) {
-                  char.holding_amount[char.selected] -= 1;
-                  if (char.holding_amount[char.selected] === 0) {
-                    char.holding[char.selected] = "";
-                  }
-                }
+                char.dropitem();
                 stage.map[idx] = 50;
               }
             }
             break;
           case "grunk1":
             if (stage.floor[idx] === 9 && stage.map[idx] === 0) {
-              if (char.holding_amount[char.selected] >= 1) {
-                char.holding_amount[char.selected] -= 1;
-                if (char.holding_amount[char.selected] === 0) {
-                  char.holding[char.selected] = "";
-                }
-              } 
+              char.dropitem(); 
               let g = new Seed("grunk");
               stage.map[idx] = g;
             }
             break;
           case "pickaxe":
-            if (mineable.includes(stage.map[idx])) {
-              if (char.holding.includes(getKeyByValue(dict,stage.map[idx]))) {
-                let hold_item = getKeyByValue(dict,stage.map[idx])
-                if (char.holding_amount[char.holding.indexOf(hold_item)] <= 8){
-                  char.holding_amount[char.holding.indexOf(hold_item)] += 1;
-                  stage.map[idx] = 0;
-                }
-              } else {
-                if (char.holding.includes("")) {
-                  let new_idx = char.holding.indexOf("")
-                  char.holding[new_idx] = getKeyByValue(dict,stage.map[idx])
-                  char.holding_amount[new_idx] += 1
-                  stage.map[idx] = 0;
-                } else {
-                  alert("Inventory is full!")
-                }
+            if (block_in_house) {
+              if (mineable.includes(stage.house_map[idx])) {
+                char.additem(getKeyByValue(dict,stage.house_map[idx]))
+                stage.house_map[idx] = 0;
               }
-
-            }
+            } else {
+            if (mineable.includes(stage.map[idx])) {
+              char.additem(getKeyByValue(dict,stage.map[idx]))
+              stage.map[idx] = 0;
+            } 
+          }
             break;
           case "bucket": 
             if (stage.map[idx] instanceof Seed) {
@@ -193,6 +197,20 @@ document.addEventListener("DOMContentLoaded", function () {
               global_rod.use(char);
             } else {
               alert("Cannot fish here")
+            }
+            break;
+          case "chest":
+            if (block_in_house){
+              if(can_place){
+                char.dropitem();
+                stage.house_map[idx] = new Chest;
+                  
+              }
+            } else {
+              if(can_place){
+                char.dropitem();
+                stage.map[idx] = new Chest;
+              }
             }
         }
       }
@@ -239,7 +257,9 @@ document.addEventListener("DOMContentLoaded", function () {
       printlayer2();
       char.printchar(ctx);
       printbar()
-      // printblock();
+      if (currentchest instanceof Chest){
+        currentchest.openchest(char, ctx)
+      }
       printnextblock();
       if (inshop) {
         shop.print_shop(ctx)
@@ -373,6 +393,9 @@ document.addEventListener("DOMContentLoaded", function () {
           if(stage.house_map[idx] === 50) {
             ctx.drawImage(rock, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
           } 
+          if(stage.house_map[idx] instanceof Chest) {
+            ctx.drawImage(chest, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          }
         } else {
         if(stage.map[idx] === 50) {
           ctx.drawImage(rock, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
@@ -398,6 +421,9 @@ document.addEventListener("DOMContentLoaded", function () {
             }
             ctx.fill();
           }
+        }
+        if(stage.map[idx] instanceof Chest) {
+          ctx.drawImage(chest, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
         }
         if(stage.map[idx]===30) {
           ctx.drawImage(shop_guy, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);

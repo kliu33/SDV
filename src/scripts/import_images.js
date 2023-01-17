@@ -171,3 +171,7 @@
   crimsonfish.src = "./images/crimsonfish.png"
   const angler = new Image(tWidth,tWidth);
   angler.src = "./images/angler.png"
+  const chest_backdrop = new Image(tWidth,tWidth);
+  chest_backdrop.src = "./images/chest_backdrop.png"
+  const chest = new Image(tWidth,tWidth);
+  chest.src = "./images/chest.png"
