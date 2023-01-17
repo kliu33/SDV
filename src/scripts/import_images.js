@@ -125,3 +125,5 @@
   shop_items.src = "./images/shop_items.png"
   const bucket = new Image(tWidth,tWidth);
   bucket.src = "./images/bucket.png"
+  const game_over = new Image(tWidth,tWidth);
+  game_over.src = "./images/game_over.png"

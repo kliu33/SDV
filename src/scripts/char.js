@@ -49,7 +49,8 @@ class Char {
           ctx.fill();
           ctx.beginPath();
           ctx.arc(this.x, this.y + 15, 10, 0, (2 * Math.PI) * (this.hunger/100), false);
-          ctx.fillStyle = `#${this.hunger < 50 ? 255 : (51 + Math.floor(((100-this.hunger) / 100) * 204)).toString(16)}${(this.hunger >= 50 ? 255 : 51 + Math.floor(((this.hunger) / 100) * 204)).toString(16)}51`;
+          console.log(`#${this.hunger < 50 ? 255 : (51 + Math.floor(((100-this.hunger) / 100) * 204)).toString(16)}${(this.hunger >= 50 ? 255 : 51 + Math.floor(((this.hunger) / 100) * 204)).toString(16)}51`)
+          ctx.fillStyle = `#${(this.hunger < 50 ? 255 : 51 + Math.floor(((100-this.hunger) / 100) * 204)).toString(16)}${(this.hunger >= 50 ? 255 : (51 + Math.floor(((this.hunger) / 100) * 204))).toString(16)}51`;
           ctx.fill();
       }
 

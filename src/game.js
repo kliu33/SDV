@@ -240,8 +240,9 @@ document.addEventListener("DOMContentLoaded", function () {
         shop.print_shop(ctx)
       }
       window.requestAnimationFrame(updateAll);
-    } 
-    // else print dead screen
+    } else {
+      printover();
+    }
   };
 
   window.onload = () => {
@@ -427,6 +428,10 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.fillStyle = "black";
     ctx.fillText(`${char.holding[char.selected]}`, stage.pixel_size * (char.holding.length+1), canvas.width + (stage.pixel_size)/2);
     ctx.fillText(`${stage.hours}:${stage.minutes < 10 ? `0${stage.minutes}` : stage.minutes}`, stage.pixel_size * (char.holding.length+4), canvas.width + (stage.pixel_size)/2);
+  }
+
+  const printover = () => {
+    ctx.drawImage(game_over, 0, 0, canvas.width, canvas.height)
   }
 
   const nextpix = () => {
