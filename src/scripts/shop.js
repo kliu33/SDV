@@ -21,6 +21,7 @@ class Shop {
           "searock": this.fish_price[0],
           "clam": this.fish_price[0],
           "kelp": this.fish_price[0],
+          "log": this.fish_price[0],
           "anchovy": this.fish_price[1],
           "sardine": this.fish_price[1],
           "shad": this.fish_price[1],

@@ -1,12 +1,18 @@
-
-
 document.addEventListener("DOMContentLoaded", function () {
   const canvas = document.getElementById("game-canvas");
   const ctx = canvas.getContext("2d");
+
   const walkable = [0, 4, 5, 9, 27];
   const mineable = [50];
   const placeable = [0, 4, 5, 1, 50];
   const one_of = ["pickaxe", "bucket", "fishing_rod"];
+
+  const char = new Char(419,277); //STARTING LOCATION FOR CHARACTER
+  const stage = new Map();
+  const shop = new Shop(char);
+  const global_bucket = new Bucket();
+  const global_rod = new FishingRod();
+
   let currentchest;
   let inshop = false;
 
@@ -21,48 +27,70 @@ document.addEventListener("DOMContentLoaded", function () {
   function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
   }
-    const char = new Char(419,277);
-    const stage = new Map();
-    const shop = new Shop(char);
-    const global_bucket = new Bucket();
-    const global_rod = new FishingRod();
-    function inhouse (x,y) {
-      return x > 270 && y < 270
-    }
+  
+  function inhouse (x,y) {
+    return x > 270 && y < 270
+  }
 
-    function add_action(e) {
-      if (currentchest instanceof Chest) {
-        let len = currentchest.contents.length;
-        if (e.keyCode == 27) {
-          currentchest = "";
-        }
-        if (e.keyCode == 65) {
-          if (currentchest.selection != 0) {
-            if (currentchest.selection != (len/2)){
-              currentchest.selection -= 1
-            }
-          }
-        }
-        if (e.keyCode == 68) {
-          if (currentchest.selection != ((len/2)-1) && currentchest.selection != len-1){
-            currentchest.selection += 1
-          }
-        }
-        if (e.keyCode == 83) {
-            if (currentchest.selection <= 5) {
-              currentchest.selection += 6
-            }
-        }
-        if (e.keyCode == 87) {
-            if (currentchest.selection >5){
-              currentchest.selection -= 6
-            }
-        }
-        if (e.keyCode == 32) {
-          e.preventDefault();
-          currentchest.takeitem(char)
+  const updateAll = () => {
+    if (char.alive) {
+      document.onkeydown = add_action;
+      document.onkeyup = remove_action;
+      move();
+      printlayer1();
+      printlayer2();
+      char.printchar(ctx);
+      printbar()
+      if (currentchest instanceof Chest){
+        currentchest.openchest(char, ctx)
       }
-      } else if (inshop) {
+      printnextblock();
+      if (inshop) {
+        shop.print_shop(ctx)
+      }
+      window.requestAnimationFrame(updateAll);
+    } else {
+      printover();
+    }
+  };
+
+  window.onload = () => {
+    window.requestAnimationFrame(updateAll);
+  };
+
+  function add_action(e) {
+    if (currentchest instanceof Chest) {
+      let len = currentchest.contents.length;
+      if (e.keyCode == 27) {
+        currentchest = "";
+      }
+      if (e.keyCode == 65) {
+        if (currentchest.selection != 0) {
+          if (currentchest.selection != (len/2)){
+            currentchest.selection -= 1
+          }
+        }
+      }
+      if (e.keyCode == 68) {
+        if (currentchest.selection != ((len/2)-1) && currentchest.selection != len-1){
+          currentchest.selection += 1
+        }
+      }
+      if (e.keyCode == 83) {
+          if (currentchest.selection <= 5) {
+            currentchest.selection += 6
+          }
+      }
+      if (e.keyCode == 87) {
+          if (currentchest.selection >5){
+            currentchest.selection -= 6
+          }
+      }
+      if (e.keyCode == 32) {
+        e.preventDefault();
+        currentchest.takeitem(char)
+      }
+    } else if (inshop) {
         if (e.keyCode == 27) {
           inshop = false;
         }
@@ -231,48 +259,22 @@ document.addEventListener("DOMContentLoaded", function () {
         char.selected = 4
       }
     }
-    }
+  }
 
-    function remove_action(e) {
-      if (e.keyCode == 68) {
-        char.moving_right = false;
-      }
-      if (e.keyCode == 65) {
-        char.moving_left = false;
-      }
-      if (e.keyCode == 87) {
-        char.moving_up = false;
-      }
-      if (e.keyCode == 83) {
-        char.moving_down = false;
-      }
+  function remove_action(e) {
+    if (e.keyCode == 68) {
+      char.moving_right = false;
     }
-
-  const updateAll = () => {
-    if (char.alive) {
-      document.onkeydown = add_action;
-      document.onkeyup = remove_action;
-      move();
-      printlayer1();
-      printlayer2();
-      char.printchar(ctx);
-      printbar()
-      if (currentchest instanceof Chest){
-        currentchest.openchest(char, ctx)
-      }
-      printnextblock();
-      if (inshop) {
-        shop.print_shop(ctx)
-      }
-      window.requestAnimationFrame(updateAll);
-    } else {
-      printover();
+    if (e.keyCode == 65) {
+      char.moving_left = false;
     }
-  };
-
-  window.onload = () => {
-    window.requestAnimationFrame(updateAll);
-  };
+    if (e.keyCode == 87) {
+      char.moving_up = false;
+    }
+    if (e.keyCode == 83) {
+      char.moving_down = false;
+    }
+  }
 
   const move = () => {
     let nextpixel = nextpix();
@@ -351,6 +353,8 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   }
 
+  // PRINTING 
+
   const printlayer1 = () => {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for (let i = 0; i < stage.rows; i++) {
@@ -380,10 +384,10 @@ document.addEventListener("DOMContentLoaded", function () {
           if(stage.floor[idx] === 6) {
             ctx.drawImage(water, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
           }
+        }
       }
     }
   }
-}
 
   const printlayer2 = () => {
     for (let i = 0; i < stage.rows; i++) {
@@ -397,41 +401,42 @@ document.addEventListener("DOMContentLoaded", function () {
             ctx.drawImage(chest, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
           }
         } else {
-        if(stage.map[idx] === 50) {
-          ctx.drawImage(rock, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
-        } 
-        if (stage.map[idx] <= 29 && stage.map[idx] >= 5) {
-          ctx.drawImage(eval(`house${stage.map[idx]-4}`), stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
-        }
-        if(stage.map[idx] instanceof Seed) {
-          if (!stage.map[idx].life) {
-            stage.map[idx] = 0
-          } else {
-            ctx.drawImage(eval(stage.map[idx].type.concat(stage.map[idx].stage)), stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
-            ctx.beginPath();
-            ctx.arc((stage.pixel_size * j) + 15, (stage.pixel_size * i) + 15, 10, 0, 2 * Math.PI);
-            ctx.fillStyle = 'black';
-            ctx.fill();
-            ctx.beginPath();
-            ctx.arc((stage.pixel_size * j) + 15, (stage.pixel_size * i) + 15, 10, 0, (2 * Math.PI) * (stage.map[idx].water_level/100), false);
-            if (stage.map[idx].water_level > 40) {
-              ctx.fillStyle = 'blue';
-            } else {
-              ctx.fillStyle = 'brown';
-            }
-            ctx.fill();
+          if(stage.map[idx] === 50) {
+            ctx.drawImage(rock, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          } 
+          if (stage.map[idx] <= 29 && stage.map[idx] >= 5) {
+            ctx.drawImage(eval(`house${stage.map[idx]-4}`), stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
           }
-        }
-        if(stage.map[idx] instanceof Chest) {
-          ctx.drawImage(chest, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
-        }
-        if(stage.map[idx]===30) {
-          ctx.drawImage(shop_guy, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          if(stage.map[idx] instanceof Seed) {
+            if (!stage.map[idx].life) {
+              stage.map[idx] = 0
+            } else {
+              ctx.drawImage(eval(stage.map[idx].type.concat(stage.map[idx].stage)), stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+              ctx.beginPath();
+              ctx.arc((stage.pixel_size * j) + 15, (stage.pixel_size * i) + 15, 10, 0, 2 * Math.PI);
+              ctx.fillStyle = 'black';
+              ctx.fill();
+              ctx.beginPath();
+              ctx.arc((stage.pixel_size * j) + 15, (stage.pixel_size * i) + 15, 10, 0, (2 * Math.PI) * (stage.map[idx].water_level/100), false);
+              if (stage.map[idx].water_level > 40) {
+                ctx.fillStyle = 'blue';
+              } else {
+                ctx.fillStyle = 'brown';
+              }
+              ctx.fill();
+            }
+          }
+          if(stage.map[idx] instanceof Chest) {
+            ctx.drawImage(chest, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          }
+          if(stage.map[idx]===30) {
+            ctx.drawImage(shop_guy, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          }
         }
       }
     }
   }
-  }
+  
   const printbar = () => {
     ctx.drawImage(inv_bar, 0, canvas.width, canvas.width,stage.pixel_size)
     for (i = 0; i < char.holding.length; i++) {
@@ -466,9 +471,22 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.fillText(`${stage.hours}:${stage.minutes < 10 ? `0${stage.minutes}` : stage.minutes}`, stage.pixel_size * (char.holding.length+4), canvas.width + (stage.pixel_size)/2);
   }
 
+  const printnextblock = () => {
+    if (char.holding[char.selected] != ""){
+      let next_block = nextblockcheck(char.x,char.y);
+      if (next_block[0] < 10 && next_block[1] < 10) {
+        ctx.globalAlpha = 0.5;
+        ctx.drawImage(eval(char.holding[char.selected]), stage.pixel_size * next_block[0], stage.pixel_size* next_block[1], stage.pixel_size, stage.pixel_size);
+        ctx.globalAlpha = 1.0;
+      }
+    }
+  }
+
   const printover = () => {
     ctx.drawImage(game_over, 0, 0, canvas.width, canvas.height)
   }
+
+  // HELPER FUNCTIONS
 
   const nextpix = () => {
     let next_x = char.x
@@ -580,17 +598,6 @@ document.addEventListener("DOMContentLoaded", function () {
         block_y += 1;
     }
     return [block_x, block_y]
-  }
-
-  const printnextblock = () => {
-    if (char.holding[char.selected] != ""){
-      let next_block = nextblockcheck(char.x,char.y);
-      if (next_block[0] < 10 && next_block[1] < 10) {
-        ctx.globalAlpha = 0.5;
-        ctx.drawImage(eval(char.holding[char.selected]), stage.pixel_size * next_block[0], stage.pixel_size* next_block[1], stage.pixel_size, stage.pixel_size);
-        ctx.globalAlpha = 1.0;
-      }
-    }
   }
 
   
