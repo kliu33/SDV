@@ -2,14 +2,15 @@ class Shop {
     constructor(char) {
         this.fish_price = [5, 20, 30, 50, 75, 100, 1000]
         this.char = char
-        this.items = ["grunk1", "pickaxe", "rock","bucket", "fishing_rod", "chest"]
+        this.items = ["grunk1", "pickaxe", "rock","bucket", "fishing_rod", "chest", "stove"]
         this.items_buy_price = {
             "grunk1" : 30,
             "pickaxe" : 50,
             "rock" : 10,
             "bucket" : 100,
             "fishing_rod": 200,
-            "chest": 350
+            "chest": 350,
+            "stove": 500
         }
         this.items_sell_price = {
           "grunk1" : 15,
@@ -18,6 +19,7 @@ class Shop {
           "grunk7" : 70,
           "bucket" : 50,
           "fishing_rod": 200,
+          "stove": 250,
           "searock": this.fish_price[0],
           "clam": this.fish_price[0],
           "kelp": this.fish_price[0],

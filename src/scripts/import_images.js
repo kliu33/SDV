@@ -175,3 +175,7 @@
   chest_backdrop.src = "./images/chest_backdrop.png"
   const chest = new Image(tWidth,tWidth);
   chest.src = "./images/chest.png"
+  const stove = new Image(tWidth,tWidth);
+  stove.src = "./images/stove.png"
+  const stove_cooking = new Image(tWidth,tWidth);
+  stove_cooking.src = "./images/stove_cooking.png"

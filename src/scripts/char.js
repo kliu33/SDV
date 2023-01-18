@@ -17,6 +17,14 @@ class Char {
         setInterval(this.hungry.bind(this), 5000);
     }
 
+    eat_something(value) {
+      if (hunger + value > 100) {
+        hunger = 100
+      } else {
+        hunger += value
+      }
+    }
+
     additem(item) {
       if (this.holding.includes(item)) {
         if (this.holding_amount[this.holding.indexOf(item)] < 9) {

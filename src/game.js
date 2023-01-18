@@ -48,6 +48,7 @@ document.addEventListener("DOMContentLoaded", function () {
   };
 
   function add_action(e) {
+    
     if (currentchest instanceof Chest) {
       let len = currentchest.contents.length;
       if (e.keyCode == 27) {
@@ -136,7 +137,11 @@ document.addEventListener("DOMContentLoaded", function () {
         } else {
           can_place = (stage.map[idx] === 0 && stage.placeable.includes(stage.floor[idx]));
         } 
-        if (block_in_house && stage.house_map[idx] instanceof Chest && char.holding[char.selected] != ""){ 
+        if (block_in_house && stage.house_map[idx] instanceof Stove && char.holding[char.selected] != ""){ 
+          stage.house_map[idx].additem(char, char.holding[char.selected])
+        } else if (!block_in_house && stage.map[idx] instanceof Stove && char.holding[char.selected] != "") {
+          stage.map[idx].additem(char, char.holding[char.selected])
+        } else if (block_in_house && stage.house_map[idx] instanceof Chest && char.holding[char.selected] != ""){ 
           stage.house_map[idx].additem(char, char.holding[char.selected])
         } else if (!block_in_house && stage.map[idx] instanceof Chest && char.holding[char.selected] != "") {
           stage.map[idx].additem(char, char.holding[char.selected])
@@ -165,6 +170,10 @@ document.addEventListener("DOMContentLoaded", function () {
               currentchest = stage.map[idx]
             } else if (stage.house_map[idx] instanceof Chest) {
               currentchest = stage.house_map[idx]
+            } else if (stage.map[idx] instanceof Stove){
+              stage.map[idx].eat(char)
+            } else if (stage.house_map[idx] instanceof Stove) {
+              stage.house_map[idx].eat(char)
             }
             break;
           case "rock":
@@ -227,6 +236,20 @@ document.addEventListener("DOMContentLoaded", function () {
               if(can_place){
                 char.dropitem();
                 stage.map[idx] = new Chest;
+              }
+            }
+            break;
+          case "stove":
+            if (block_in_house){
+              if(can_place){
+                char.dropitem();
+                stage.house_map[idx] = new Stove;
+                  
+              }
+            } else {
+              if(can_place){
+                char.dropitem();
+                stage.map[idx] = new Stove;
               }
             }
           }
@@ -389,6 +412,13 @@ document.addEventListener("DOMContentLoaded", function () {
           if(stage.house_map[idx] instanceof Chest) {
             ctx.drawImage(chest, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
           }
+          if(stage.house_map[idx] instanceof Stove) {
+            if(!stage.house_map[idx].cooking) {
+              ctx.drawImage(stove, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+            } else {
+              ctx.drawImage(stove_cooking, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+            }
+          }
         } else {
           if(stage.map[idx] === 50) {
             ctx.drawImage(rock, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
@@ -417,6 +447,13 @@ document.addEventListener("DOMContentLoaded", function () {
           }
           if(stage.map[idx] instanceof Chest) {
             ctx.drawImage(chest, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          }
+          if(stage.map[idx] instanceof Stove) {
+            if(!stage.map[idx].cooking) {
+              ctx.drawImage(stove, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+            } else {
+              ctx.drawImage(stove_cooking, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+            }
           }
           if(stage.map[idx]===30) {
             ctx.drawImage(shop_guy, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
