@@ -85,13 +85,23 @@ document.addEventListener("DOMContentLoaded", function () {
           inshop = false;
         }
         if (e.keyCode == 87) {
-          if (shop.selection != 0) {
+          if (shop.selection != 0 && shop.selection != 7) {
             shop.selection -= 1
           }
         }
         if (e.keyCode == 83) {
-          if (shop.selection != shop.items.length - 1) {
+          if (shop.selection != shop.items.length - 1 && shop.selection != 6) {
             shop.selection += 1
+          }
+        }
+        if (e.keyCode == 68) {
+          if (shop.selection < 7) {
+            shop.selection += 7
+          }
+        }
+        if (e.keyCode == 65) {
+          if (shop.selection >= 7) {
+            shop.selection -= 7
           }
         }
         if (e.keyCode == 32) {
@@ -230,7 +240,6 @@ document.addEventListener("DOMContentLoaded", function () {
               if(can_place){
                 char.dropitem();
                 stage.house_map[idx] = new Chest;
-                  
               }
             } else {
               if(can_place){
@@ -251,6 +260,14 @@ document.addEventListener("DOMContentLoaded", function () {
                 char.dropitem();
                 stage.map[idx] = new Stove;
               }
+            }
+            break;
+          case "shelf":
+            if (block_in_house) {
+              char.dropitem();
+              stage.house_map[idx] = 51;
+            } else {
+              alert("Can only place in house")
             }
           }
         }
@@ -408,6 +425,18 @@ document.addEventListener("DOMContentLoaded", function () {
         if (inhouse(char.x,char.y)) {
           if(stage.house_map[idx] === 50) {
             ctx.drawImage(rock, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          } 
+          if(stage.house_map[idx] === 51) {
+            ctx.drawImage(shelf, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          } 
+          if(stage.house_map[idx] === 52) {
+            ctx.drawImage(bed, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          } 
+          if(stage.house_map[idx] === 53) {
+            ctx.drawImage(closet, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          } 
+          if(stage.house_map[idx] === 54) {
+            ctx.drawImage(table, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
           } 
           if(stage.house_map[idx] instanceof Chest) {
             ctx.drawImage(chest, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);

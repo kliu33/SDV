@@ -179,3 +179,11 @@
   stove.src = "./images/stove.png"
   const stove_cooking = new Image(tWidth,tWidth);
   stove_cooking.src = "./images/stove_cooking.png"
+  const bed = new Image(tWidth,tWidth);
+  bed.src = "./images/bed.png"
+  const closet = new Image(tWidth,tWidth);
+  closet.src = "./images/closet.png"
+  const shelf = new Image(tWidth,tWidth);
+  shelf.src = "./images/shelf.png"
+  const table = new Image(tWidth,tWidth);
+  table.src = "./images/table.png"

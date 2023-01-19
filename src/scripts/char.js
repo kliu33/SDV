@@ -14,14 +14,14 @@ class Char {
         this.holding = ["","","","",""];
         this.holding_amount = [0,0,0,0,0];
         this.selected = 0;
-        setInterval(this.hungry.bind(this), 5000);
+        setInterval(this.hungry.bind(this), 20000);
     }
 
     eat_something(value) {
-      if (hunger + value > 100) {
-        hunger = 100
+      if (this.hunger + value > 100) {
+        this.hunger = 100
       } else {
-        hunger += value
+        this.hunger += value
       }
     }
 
