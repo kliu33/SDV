@@ -165,6 +165,8 @@ document.addEventListener("DOMContentLoaded", function () {
           } else {
             alert("Can't sell this item")
           }
+        } else if (stage.house_map[idx] === 51 && char.holding[char.selected] === "") {
+          alert(`${stage.fun_facts[Math.floor(Math.random()*stage.fun_facts.length)]}`)
         } else if (!can_place && stage.placeable.includes(stage.dict[char.holding[char.selected]])) {
           alert("Can't place here")
         } else {

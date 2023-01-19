@@ -8,6 +8,16 @@ class Map {
         this.cols = 10;
         this.hours = 7;
         this.minutes = 0;
+        this.fun_facts = ["The first computer “bug” was an actual real-life bug",
+        "The name Oak was intended to be used for the popular Java that we commonly use now, but it was already used and copyrighted",
+        "NASA’s reusable space shuttle in the 1970s had less code than our phones today.",
+        "Contrary to how it sounds like, Python was named after Monty Python, not after the snake.",
+        "There are around 700 different programming languages, with more on the way.",
+        "The first-ever computer programmer was a woman named Ada Lovelace.",
+        "Creeper System was the first computer virus that was released in 1971.",
+        "Computer codes had an important role in ending WWII.",
+        "The first programming language in the world was called FORTRAN."
+        ]
         this.dict = {
           "rock": 50,
           "grass": 0,

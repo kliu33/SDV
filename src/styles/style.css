@@ -10,6 +10,7 @@
     border: 3px solid green;
     height: auto;
     box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.2);
+    height: fit-content;
 }
 
 #title {
@@ -19,7 +20,7 @@
 }
 
 #game {
-    margin: 100px;
+    margin-left: 100px;
 }
 
 body {
@@ -44,4 +45,10 @@ body {
 
 #top{
     display: inline;
+}
+
+#audio{
+    height: 60px;
+    width: 60px;
+    cursor: pointer;
 }

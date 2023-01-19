@@ -7,6 +7,7 @@
     <script type="application/javascript" src="./dist/main.js" defer></script>
     <script src="./src/scripts/map.js"></script>
     <script src="./src/scripts/bucket.js"></script>
+    <script src="./src/scripts/audio.js"></script>
     <script src="./src/scripts/fishing_rod.js"></script>
     <script src="./src/scripts/stove.js"></script>
     <script src="./src/scripts/chest.js"></script>
@@ -29,27 +30,28 @@
     </header>
     <div class="container">
         <div class="sides">
-            <h1>lofi</h1>
-            <audio src="./music/Missing-You.mp3" controls> </audio>
+            <audio id="lofi" src="./music/Wondering.mp3" loop autoplay muted></audio>
+            <div onclick="document.getElementById('lofi').muted=!document.getElementById('lofi').muted">
+                <img id="audio" src="/images/vol-off.png" onclick="changeImage()">
+            </div>
             <h1>Controls</h1>
-            <p> WASD to move </p>
-            <p> Spacebar to do stuff </p>
-            <p> 12345 for inventory </p>
-            <p> ESC to exit shop </p>
-            <p> Backspace to drop item</p>
+            <p> Movement: WASD </p>
+            <p> Action: Spacebar </p>
+            <p> Inventory: 1/2/3/4/5 </p>
+            <p> Exit: ESC </p>
+            <p> Drop item: Backspace</p>
             <h1> Some stuff to know</h1>
             <p> Items sell for half their buy value</p>
             <p> Plants will die when water level reaches 0</p>
             <p> Plants wont grow under a certain water level</p>
-            <p> You will die when hunger level reaches 0</p>
+            <p> You will die when your hunger level reaches 0</p>
             <p> You need to add one veggie and one fish to stove</p>
         </div>
         <div id="game">
             <canvas id="game-canvas" width="600px" height="660px"></canvas>
         </div>
-        <div class="sides">
+        <!-- <div class="sides">
             <h1>To do list</h1>
-            
             <ul>Have to do</ul>
             <li style="text-decoration: line-through;">Collision</li>
             <li style="text-decoration: line-through;"> Action key (spacebar)</li>
@@ -111,7 +113,7 @@
             <li style="text-decoration: line-through;">Can place items in inventory space</li>
             <li style="text-decoration: line-through;">Can place seeds ontop of each other</li>
         </div>
-        
+         -->
         <!-- <canvas id="top-canvas"></canvas> -->
         
     </div>
