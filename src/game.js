@@ -400,25 +400,25 @@ document.addEventListener("DOMContentLoaded", function () {
       if (char.moving_right) {
         char.facing = "right";
         if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1])  && inbounds())
-        char.x+=1;
+        char.x+=char.speed;
       }
       if (char.moving_left) {
         char.facing = "left"
         if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
-        char.x-=1;
+        char.x-=char.speed;
       }
       if (char.moving_up) {
         char.facing = "up"
         if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
-        char.y-=1;
+        char.y-=char.speed;
       }
       if (char.moving_down) {
         char.facing = "down"
         if (stage.house_map[next_block_idx] === 1) {
-          char.y+=1;
+          char.y+=char.speed;
         }
         if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
-        char.y+=1;
+        char.y+=char.speed;
       }
       if (char.moving_up && char.moving_left) {
         char.facing = "up_left"
@@ -436,22 +436,22 @@ document.addEventListener("DOMContentLoaded", function () {
       if (char.moving_right) {
         char.facing = "right";
         if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds()) 
-        char.x+=1;
+        char.x+=char.speed;
       }
       if (char.moving_left) {
         char.facing = "left"
         if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds())
-        char.x-=1;
+        char.x-=char.speed;
       }
       if (char.moving_up) {
         char.facing = "up"
         if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds())
-        char.y-=1;
+        char.y-=char.speed;
       }
       if (char.moving_down) {
         char.facing = "down"
         if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds())
-        char.y+=1;
+        char.y+=char.speed;
       }
       if (char.moving_up && char.moving_left) {
         char.facing = "up_left"
@@ -612,12 +612,12 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.drawImage(eval(`num${char.holding_amount[i]}`), (stage.pixel_size * i) + (stage.pixel_size * (4/6)), canvas.width + (stage.pixel_size * (4/6)), stage.pixel_size*(2/6),stage.pixel_size*(2/6))
       }
     }
-    ctx.font = "italic 30px brush script mt";
-    ctx.fillStyle = "#b3b300";
-    ctx.fillText(`$${char.money}`, stage.pixel_size * char.holding.length, canvas.width + (stage.pixel_size)/1.5);
+    ctx.font = "30px bold serif";
+    ctx.fillStyle = "#e6b800";
+    ctx.fillText(`$${char.money}`, stage.pixel_size * char.holding.length + 10, canvas.width + (stage.pixel_size)/1.5);
     ctx.font = "bold 20px serif";
     ctx.fillStyle = "black";
-    ctx.fillText(`${char.holding[char.selected]}`, stage.pixel_size * (char.holding.length+1.3), canvas.width + (stage.pixel_size)/1.5);
+    ctx.fillText(`${char.holding[char.selected]}`, stage.pixel_size * (char.holding.length+1.3) + 30, canvas.width + (stage.pixel_size)/1.5);
     ctx.font = "bold 30px serif";
     ctx.fillStyle = "black";
     ctx.fillText(`${stage.hours}:${stage.minutes < 10 ? `0${stage.minutes}` : stage.minutes}`, stage.pixel_size * (char.holding.length+3.5), canvas.width + (stage.pixel_size)/1.5);

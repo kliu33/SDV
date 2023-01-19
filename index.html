@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat+Alternates:wght@600&family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
     <script type="application/javascript" src="./dist/main.js" defer></script>
     <script src="./src/scripts/map.js"></script>
     <script src="./src/scripts/bucket.js"></script>
@@ -20,19 +23,16 @@
     <title>Honeydew Valley</title>
     <link rel="icon" type="image/x-icon" href="./images/honeydew.png">
 </head>
-<body>
+<body background="">
     <header id="top">
-        <nav>
-            <a href="https://github.com/kliu33/SDV" target="_blank"><img id="logo" src="./images/github-logo.png"/></a><a href="https://github.com/kliu33/SDV" target="_blank"><img id="logo" src="./images/linkedin.png"/></a>
-            <a href="https://github.com/kliu33/SDV" target="_blank"><img id="logo" src="./images/www.png"/></a>
-            <h1 class="title"> Honeydew Valley</h1> </p>
-        </nav>
+        <a href="https://github.com/kliu33/SDV" target="_blank"><img id="logo" src="./images/github-logo.png"/></a>
+        <h1 class="title"> Honeydew Valley</h1> </p>
     </header>
     <div class="container">
         <div class="sides">
-            <audio id="lofi" src="./music/Wondering.mp3" loop autoplay muted></audio>
+            <audio id="lofi" src="./music/Missing-You.mp3" loop autoplay muted></audio>
             <div onclick="document.getElementById('lofi').muted=!document.getElementById('lofi').muted">
-                <img id="audio" src="/images/vol-off.png" onclick="changeImage()">
+                <img id="audio" src="./images/vol-off.png" onclick="changeImage()">
             </div>
             <h1>Controls</h1>
             <p> Movement: WASD </p>

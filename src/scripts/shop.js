@@ -26,7 +26,7 @@ class Shop {
           "pickaxe" : 25,
           "rock" : 5,
           "grunk7" : 70,
-          "root" : 100,
+          "root7" : 100,
           "bucket" : 50,
           "fishing_rod": 200,
           "stove": 250,

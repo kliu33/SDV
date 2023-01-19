@@ -1,22 +1,18 @@
 .container {
     display: flex;
-    justify-content: center;
+    margin-left: 10%;
     
   }
 
 .sides {
     font-family:Georgia, 'Times New Roman', Times, serif ;
     padding: 20px;
-    border: 3px solid green;
+    border: 5px solid green;
     height: auto;
+    background-color: #00cc00;
     box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.2);
     height: fit-content;
-}
-
-#title {
-    font-size: 70px;
-    margin: auto;
-    text-align: center;
+    border-radius: 15px 50px;
 }
 
 #game {
@@ -25,26 +21,31 @@
 
 body {
     /* background-image: url("../../images/backdrop.jpg"); */
-   background-color:#ccffcc;
+   background-image: url('../../images/backdrop.jpg');
 }
 
 #logo {
     height: 60px;
     width: 60px;
+    display: inline-block;
+    margin-left: 30px;
 }
 
 #game-canvas {
     border: 5px solid green;
     box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.2);
+    border-radius: 25px;
 }
 
 .title {
+    font-family: 'Monsterrat Alternates', sans-serif;
+    color: white;
     text-align: center;
-    font-size: 40px;
-}
-
-#top{
-    display: inline;
+    font-size: 60px;
+    display: inline-block;
+    justify-content: center;
+    margin-left: 40%;
+    text-shadow: 5px 5px 5px black;
 }
 
 #audio{
