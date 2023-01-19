@@ -4,7 +4,7 @@ class Char {
         this.x = x;
         this.y = y;
         this.speed = 2;
-        this.money = 2000;
+        this.money = 9999;
         this.hunger = 100;
         this.facing= "down";
         this.alive = true;

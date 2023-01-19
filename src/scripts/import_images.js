@@ -205,5 +205,6 @@
   root5.src = "./images/root5.png"
   const root6 = new Image(tWidth,tWidth);
   root6.src = "./images/root6.png"
+  
   const root7 = new Image(tWidth,tWidth);
   root7.src = "./images/root7.png"
