@@ -36,3 +36,12 @@ body {
     border: 5px solid green;
     box-shadow: 5px 5px 5px 5px rgba(0,0,0,0.2);
 }
+
+.title {
+    text-align: center;
+    font-size: 40px;
+}
+
+#top{
+    display: inline;
+}

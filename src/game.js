@@ -206,6 +206,13 @@ document.addEventListener("DOMContentLoaded", function () {
               stage.map[idx] = g;
             }
             break;
+          case "root1":
+            if (stage.floor[idx] === 9 && stage.map[idx] === 0) {
+              char.dropitem(); 
+              let g = new Seed("root");
+              stage.map[idx] = g;
+            }
+            break;
           case "pickaxe":
             if (block_in_house) {
               if (stage.mineable.includes(stage.house_map[idx])) {
@@ -264,11 +271,88 @@ document.addEventListener("DOMContentLoaded", function () {
             break;
           case "shelf":
             if (block_in_house) {
-              char.dropitem();
-              stage.house_map[idx] = 51;
+              if (can_place) {
+                char.dropitem();
+                stage.house_map[idx] = 51;
+              } else {
+                alert("Cant place here")
+              }
             } else {
               alert("Can only place in house")
             }
+            break;
+          case "bed":
+            if (block_in_house) {
+              if (can_place) {
+                char.dropitem();
+                stage.house_map[idx] = 52;
+              } else {
+                alert("Cant place here")
+              }
+            } else {
+              alert("Can only place in house")
+            }
+            break;
+          case "closet":
+            if (block_in_house) {
+              if (can_place) {
+                char.dropitem();
+                stage.house_map[idx] = 53;
+              } else {
+                alert("Cant place here")
+              }
+            } else {
+              alert("Can only place in house")
+            }
+            break;
+          case "table":
+            if (block_in_house) {
+              if (can_place) {
+                char.dropitem();
+                stage.house_map[idx] = 54;
+              } else {
+                alert("Cant place here")
+              }
+            } else {
+              alert("Can only place in house")
+            }
+            break;
+          case "cactus":
+            if (stage.floor[idx] === 4 || stage.floor[idx] === 5) {
+              if (can_place) {
+                char.dropitem();
+                stage.map[idx] = 55;
+              } else {
+                alert("Cant place here")
+              }
+            } else {
+              alert("Can only place on sand")
+            }
+            break;
+          case "roses":
+            if (!block_in_house && stage.floor[idx] === 0) {
+              if (can_place) {
+                char.dropitem();
+                stage.map[idx] = 56;
+              } else {
+                alert("Cant place here")
+              }
+            } else {
+              alert("Can only place on grass")
+            }
+            break;
+          case "violets":
+            if (!block_in_house && stage.floor[idx] === 0) {
+              if (can_place) {
+                char.dropitem();
+                stage.map[idx] = 57;
+              } else {
+                alert("Cant place here")
+              }
+            } else {
+              alert("Can only place on grass")
+            }
+            break;
           }
         }
       }
@@ -452,6 +536,15 @@ document.addEventListener("DOMContentLoaded", function () {
           if(stage.map[idx] === 50) {
             ctx.drawImage(rock, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
           } 
+          if(stage.map[idx] === 55) {
+            ctx.drawImage(cactus, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          } 
+          if(stage.map[idx] === 56) {
+            ctx.drawImage(roses, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          } 
+          if(stage.map[idx] === 57) {
+            ctx.drawImage(violets, stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
+          } 
           if (stage.map[idx] <= 29 && stage.map[idx] >= 5) {
             ctx.drawImage(eval(`house${stage.map[idx]-4}`), stage.pixel_size * j, stage.pixel_size * i, stage.pixel_size, stage.pixel_size);
           }
@@ -519,11 +612,13 @@ document.addEventListener("DOMContentLoaded", function () {
     }
     ctx.font = "italic 30px brush script mt";
     ctx.fillStyle = "#b3b300";
-    ctx.fillText(`$${char.money}`, stage.pixel_size * char.holding.length, canvas.width + (stage.pixel_size)/2);
-    ctx.font = "normal 18px fantasy";
+    ctx.fillText(`$${char.money}`, stage.pixel_size * char.holding.length, canvas.width + (stage.pixel_size)/1.5);
+    ctx.font = "bold 20px serif";
     ctx.fillStyle = "black";
-    ctx.fillText(`${char.holding[char.selected]}`, stage.pixel_size * (char.holding.length+1), canvas.width + (stage.pixel_size)/2);
-    ctx.fillText(`${stage.hours}:${stage.minutes < 10 ? `0${stage.minutes}` : stage.minutes}`, stage.pixel_size * (char.holding.length+4), canvas.width + (stage.pixel_size)/2);
+    ctx.fillText(`${char.holding[char.selected]}`, stage.pixel_size * (char.holding.length+1.3), canvas.width + (stage.pixel_size)/1.5);
+    ctx.font = "bold 30px serif";
+    ctx.fillStyle = "black";
+    ctx.fillText(`${stage.hours}:${stage.minutes < 10 ? `0${stage.minutes}` : stage.minutes}`, stage.pixel_size * (char.holding.length+3.5), canvas.width + (stage.pixel_size)/1.5);
   }
 
   const printnextblock = () => {
@@ -613,6 +708,13 @@ document.addEventListener("DOMContentLoaded", function () {
       return next_x + stage.pixel_size <= canvas.width && next_y + stage.pixel_size <= 600 && next_x >= 0 && next_y >= 0
       
   }
+
+  // function pickup() {
+  //   let next_block = nextblockcheck(char.x,char.y);
+  //   let idx = next_block[1] * stage.cols + next_block[0];
+  //   let next_pix4 = nextpix();
+  //   let block_in_house = inhouse(next_pix4[0], next_pix4[1])
+  // }
 
   function currentblockcheck(x,y) {
     let block_x = Math.floor((x+(stage.pixel_size/2))/stage.pixel_size)

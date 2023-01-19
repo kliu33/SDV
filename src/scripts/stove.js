@@ -5,6 +5,7 @@ class Stove {
         this.cooking = false;
         this.veggie_values = {
             "grunk7" : 20,
+            "root7": 30
         }
 
         this.fish_values = {
@@ -61,6 +62,8 @@ class Stove {
             alert(`Ate a ${this.veggie}/${this.fish} soup for ${value} value`)
             char.eat_something(value);
             this.cooking = false;
+            this.veggie = "";
+            this.fish = "";
             return true;
         } else {
             alert(`Please add ${this.veggie != "" ? "" : "veggie"} ${this.fish != "" ? "" : "fish"}`)
