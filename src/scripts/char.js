@@ -28,7 +28,7 @@ class Char {
 
     additem(item) {
       if (this.holding.includes(item)) {
-        if (this.holding_amount[this.holdinwdg.indexOf(item)] < 9) {
+        if (this.holding_amount[this.holding.indexOf(item)] < 9) {
           this.holding_amount[this.holding.indexOf(item)] += 1;
           return true
         } else {
