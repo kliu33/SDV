@@ -174,8 +174,7 @@ document.addEventListener("DOMContentLoaded", function () {
           case "":
             if (stage.map[idx] instanceof Seed) {
               if (stage.map[idx].stage === 7) {
-                char.holding[char.selected] = stage.map[idx].type.concat(stage.map[idx].stage)
-                char.holding_amount[char.selected] += 1
+                char.additem(stage.map[idx].type.concat(stage.map[idx].stage))
                 stage.map[idx] = 0;
               }
             } else if (stage.map[idx] instanceof Chest){
