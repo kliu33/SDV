@@ -167,7 +167,13 @@ document.addEventListener("DOMContentLoaded", function () {
           }
         } else if (stage.house_map[idx] === 51 && char.holding[char.selected] === "") {
           alert(`${stage.fun_facts[Math.floor(Math.random()*stage.fun_facts.length)]}`)
-        } else if (!can_place && stage.placeable.includes(stage.dict[char.holding[char.selected]])) {
+        } else if (stage.house_map[idx] === 53 && char.holding[char.selected] === "") {
+          alert(`Get out of there Chak...`)
+        }else if (stage.map[idx] === 55 && char.holding[char.selected] === "") {
+          alert(`Ow`)
+        }else if (stage.house_map[idx] === 52 && char.holding[char.selected] === "") {
+          alert(`Zzz.... (this has no functionality)`)
+        }else if (!can_place && stage.placeable.includes(stage.dict[char.holding[char.selected]])) {
           alert("Can't place here")
         } else {
         switch(char.holding[char.selected]){
