@@ -18,6 +18,10 @@ class Char {
         setInterval(this.hungry.bind(this), 20000);
     }
 
+    in_hand() {
+      return this.holding[this.selected]
+    }
+
     eat_something(value) {
       if (this.hunger + value > 100) {
         this.hunger = 100

@@ -1,7 +1,6 @@
 .container {
     display: flex;
     margin-left: 10%;
-    
   }
 
 .sides {
@@ -40,7 +39,7 @@ body {
 }
 
 .title {
-    font-family: 'Monsterrat Alternates', sans-serif;
+    font-family: sans-serif;
     color: white;
     text-align: center;
     font-size: 60px;
