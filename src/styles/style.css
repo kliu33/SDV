@@ -22,6 +22,8 @@
 body {
     /* background-image: url("../../images/backdrop.jpg"); */
    background-image: url('../../images/backdrop.jpg');
+   background-size: cover;
+   background-repeat: no-repeat;
 }
 
 #logo {
