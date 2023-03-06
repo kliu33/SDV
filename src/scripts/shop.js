@@ -3,6 +3,7 @@ class Shop {
         this.fish_price = [5, 20, 30, 50, 75, 100, 1000]
         this.char = char
         this.items = ["grunk1", "root1", "pickaxe","bucket", "fishing_rod", "chest", "stove", "closet","shelf","table","bed", "cactus","roses","violets"]
+        this.item_names = ["Grunk", "Root", "Pickaxe", "Bucket", "Fishing Rod", "Chest", "Stove", "Closet", "Shelf", "Table","Bed","Cactus", "Roses", "Violets"]
         this.items_buy_price = {
             "grunk1" : 30,
             "root1": 40,
@@ -59,7 +60,6 @@ class Shop {
           "crimsonfish": this.fish_price[6],
           "angler": this.fish_price[6],
           "chest": 175
-
         }
         this.selection = 0;
     }
@@ -76,8 +76,7 @@ class Shop {
         ctx.font = "normal 18px fantasy";
         ctx.fillStyle = "black";
         ctx.fillText(`$${this.items_buy_price[this.items[i]]}`, i <= 6 ? tWidth*3 : tWidth*6.5, i <= 6 ? (tWidth * (i+2)) : (tWidth * ((i+2)-7)));
-        ctx.fillText(`${this.items[i]}`, i <= 6 ? tWidth*4 : tWidth*7.5, i <= 6 ? (tWidth * (i+2)) : (tWidth * ((i+2)-7)));
-      
+        ctx.fillText(`${this.item_names[i]}`, i <= 6 ? tWidth*4 : tWidth*7.5, i <= 6 ? (tWidth * (i+2)) : (tWidth * ((i+2)-7)));
         }
     }
 }
