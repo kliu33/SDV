@@ -112,8 +112,9 @@ document.addEventListener("DOMContentLoaded", function () {
               if (char.holding.includes(item) && one_of.includes(item)) {
                 alert("Can only have one of this item!")
               } else {
-                char.money-=price;
-                char.additem(item)
+                if (char.additem(item)) {
+                  char.money-=price;
+                }
               }
             }  else {
             alert("Not enough money")
@@ -704,14 +705,14 @@ document.addEventListener("DOMContentLoaded", function () {
           next_y -= 1;
           break;
         case "down_left":
-          next_x -= 1;4
+          next_x -= 1;
           next_y += 1;
           break;
         case "down_right":
           next_x += 1;
           next_y += 1;
       }
-      return next_x + stage.pixel_size <= canvas.width && next_y + stage.pixel_size <= 600 && next_x >= 0 && next_y >= 0
+      return next_x + stage.pixel_size < canvas.width && next_y + stage.pixel_size < 600 && next_x >= 0 && next_y >= 0
       
   }
 
