@@ -1,43 +1,45 @@
-# [Honewdew Valley](https://kliu33.github.io/SDV/).
+# [Honewdew Valley](https://kliu33.github.io/SDV/)
 
-## Background
+Welcome to Honeydew Valley, a JavaScript-based project inspired by the popular game Stardew Valley. In this game, players take on the role of a farmer, tending to crops, fishing, and decorating your own personal space.
 
-    The game I will be attempting to make is a farming simulator similar to the popular game Stardew Valley. There really isn't a definitive objective or an end to Stardew, you are able to keep playing until you are satisfied. You gather resources through a number of different 'tasks', farming, fishing, trading, etc. Through these resources you are able to upgrade your land along with other fun uses. The game is meant to be relaxing with no real pressure to progress.
+Our game features a wide range of crops and fish to catch. Players can also upgrade their farm, purchase new equipment, and unlock decorations as they progress through the game.
 
-    Honeydew Valley will be similar in that you will be able to farm/fish/trade to gather resources to buy decorations for your land and/or make your life easier. The game will only feature one area, the starting area, but will have all the functionality of the whole city within this one area.
+We've put a lot of effort into making this game fun and accessible for players of all skill levels. Whether you're an experienced gamer or a casual player looking for a relaxing way to unwind, we think you'll find plenty to enjoy in Honeydew Valley.
 
-## Functionality
-
-    In this game users will be able to:
-    - Move around the map using their keyboard
-    - Through a simple inventory system select what they are currently "holding" and use the spacebar to use it
-    - Access a shop and chest to manage your inventory
-    - Farm and fish for resources to sell or consume
-
-    In addition this project will include:
-    - A side panal with controls and some general game rules
-    - A production README
+To get started, click the live link, read the gneral tips, and start playing today!
 
 ## Wireframe
+![Screenshot_5](https://user-images.githubusercontent.com/30753677/223146478-a5271a9b-e740-4063-9855-83c5d5cee60f.png)
+
+
+## Functionality & MVPs:
+
+Honeydew Valley features a side bar for audio, instructions, and general tips aswell as a canvas to render the game. 
+
+When a user first loads into the game:
+
+![image](https://user-images.githubusercontent.com/30753677/223147198-6098acac-9602-410c-bcdb-a602fa3ae037.png)
+
+The user is spawned into a bare map, with nothing but some initial money. The game intentially does not feature a tutorial, a lot of the fun of the game is exploring and experimenting in order to decide how you want to play. There is no "correct" way to play the game, just like there is no "wrong" way to play the game (as long as you remember to eat). Just click the unmute button for some relaxing lofi and enjoy.
 
 ## Techonologies, Libraries, APIS
 
-    This project will be implemented with the following technologies:
+   This project will be implemented with the following technologies:
     -Canvas API to render the game
     -Webpack to bundle and transpile the source Javascript code
     -npm to manage project dependencies
 
 ## Implementation Timeline
 
-    Friday Afternoon & Weekend: Get the basic functionality completely down, gather all the nessessary resources. Think about the different plants and fish that will need images. Refactor the code to create multiple JS files instead of everything in a single file.
+   Friday Afternoon & Weekend: Get the basic functionality completely down, gather all the nessessary resources. Think about the different plants and fish that will need images. Refactor the code to create multiple JS files instead of everything in a single file.
 
-    Monday: Work on the game flow, how the plants will grow, how fish will be caught, and how the interactions will work between the user and other entities. Add different tiles to the game, trees/shrubs.
+   Monday: Work on the game flow, how the plants will grow, how fish will be caught, and how the interactions will work between the user and other entities. Add different tiles to the game, trees/shrubs.
 
-    Tuesday: Work on the additional functionality, time/inventory/money. Think about having a second canvas ontop of current one for a better look.
+   Tuesday: Work on the additional functionality, time/inventory/money. Think about having a second canvas ontop of current one for a better look.
 
-    Wednesday: Work on the aesthetics of the game, fix anything that needs to be fixed. Maybe think about adding animation to things such as grass, water, or walking. Work on the webpage outside of the game through css.
+   Wednesday: Work on the aesthetics of the game, fix anything that needs to be fixed. Maybe think about adding animation to things such as grass, water, or walking. Work on the webpage outside of the game through css.
 
-    Thursday: Deploy project to github and rewrite the proposal README.
+   Thursday: Deploy project to github and rewrite the proposal README.
 
 ## Bonus Features
 
