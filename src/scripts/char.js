@@ -4,7 +4,7 @@ class Char {
         this.x = x;
         this.y = y;
         this.speed = 1;
-        this.money = 9999;
+        this.money = 500;
         this.hunger = 100;
         this.facing= "down";
         this.alive = true;
@@ -15,7 +15,7 @@ class Char {
         this.holding = ["","","","",""];
         this.holding_amount = [0,0,0,0,0];
         this.selected = 0;
-        setInterval(this.hungry.bind(this), 20000);
+        setInterval(this.hungry.bind(this), 8000);
     }
 
     in_hand() {

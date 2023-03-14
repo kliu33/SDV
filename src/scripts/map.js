@@ -1,6 +1,6 @@
 class Map {
     constructor() {
-        this.walkable = [0, 4, 5, 9,27,56,57];
+        this.walkable = [0, 4, 9,27,56,57];
         this.mineable = [50,51,52,53,54,55,56,57];
         this.placeable = [0, 4, 5, 1, 50];
         this.pixel_size = 60;

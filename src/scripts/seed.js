@@ -4,8 +4,8 @@ class Seed {
         this.stage = 1;
         this.water_level = 100;
         this.life = true;
-        setInterval(this.growUp.bind(this), 2000);
-        setInterval(this.wither.bind(this), 200);
+        setInterval(this.growUp.bind(this), 20000);
+        setInterval(this.wither.bind(this), 2000);
     }
 
     growUp() {

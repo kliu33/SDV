@@ -27,8 +27,8 @@ class Shop {
             },
             {
               name: "Fishing Rod",
-              buy_price: 250,
-              sell_price: 125,
+              buy_price: 500,
+              sell_price: 250,
               img: "fishing_rod" 
             },
             {
@@ -116,6 +116,10 @@ class Shop {
             { name: "Legend", sell_price: 1000, img: "Legend" },
             { name: "Crimson Fish", sell_price: 1000, img: "crimsonfish" },
             { name: "Angler", sell_price: 1000, img: "angler" },
+          ],
+          "Misc": [
+            { name: "Grunk", sell_price: 90, img: "grunk7" },
+            { name: "Root", sell_price: 120, img: "root7" }
           ]
         }
     }

@@ -43,6 +43,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const updateAll = () => {
     if (char.alive) {
+      console.log(inbounds())
       document.onkeydown = add_action;
       document.onkeyup = remove_action;
       move();
@@ -453,26 +454,30 @@ document.addEventListener("DOMContentLoaded", function () {
       let next_pixel_x_y = nextpix();
       if (char.moving_right) {
         char.facing = "right";
-        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1])  && inbounds())
-        char.x+=char.speed;
+        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1])  && inbounds()) {
+          char.x+=char.speed;
+        }
       }
       if (char.moving_left) {
         char.facing = "left"
-        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
-        char.x-=char.speed;
+        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds()){
+          char.x-=char.speed;
+        }
       }
       if (char.moving_up) {
         char.facing = "up"
-        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
-        char.y-=char.speed;
+        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds()){
+          char.y-=char.speed;
+        }
       }
       if (char.moving_down) {
         char.facing = "down"
         if (stage.house_map[next_block_idx] === 1) {
           char.y+=char.speed;
         }
-        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds())
-        char.y+=char.speed;
+        if (stage.walkable.includes(stage.house_map[next_block_idx]) && inhouse(next_pixel_x_y[0], next_pixel_x_y[1]) && inbounds()){
+          char.y+=char.speed;
+        }
       }
       if (char.moving_up && char.moving_left) {
         char.facing = "up_left"
@@ -489,23 +494,27 @@ document.addEventListener("DOMContentLoaded", function () {
     } else {
       if (char.moving_right) {
         char.facing = "right";
-        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds()) 
-        char.x+=char.speed;
+        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds()){
+          char.x+=char.speed;
+        }
       }
       if (char.moving_left) {
         char.facing = "left"
-        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds())
-        char.x-=char.speed;
+        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds()){
+          char.x-=char.speed;
+        }
       }
       if (char.moving_up) {
         char.facing = "up"
-        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds())
-        char.y-=char.speed;
+        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds()){
+          char.y-=char.speed;
+        }
       }
       if (char.moving_down) {
         char.facing = "down"
-        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds())
-        char.y+=char.speed;
+        if (stage.walkable.includes(stage.map[next_block_idx]) && stage.walkable.includes(stage.floor[next_block_idx]) && inbounds()){
+          char.y+=char.speed;
+        }
       }
       if (char.moving_up && char.moving_left) {
         char.facing = "up_left"
@@ -768,7 +777,7 @@ document.addEventListener("DOMContentLoaded", function () {
           next_x += 1;
           next_y += 1;
       }
-      return next_x + stage.pixel_size < canvas.width && next_y + stage.pixel_size < 600 && next_x >= 0 && next_y >= 0
+      return next_x + stage.pixel_size < canvas.width && next_y + stage.pixel_size < 600 && next_x > 0 && next_y > 0
       
   }
 
