@@ -93,6 +93,29 @@ class Shop {
               sell_price: 100,
               img: "violets",
             }
+          ],
+          "Fish": [
+            { name: "Searock", sell_price: 5, img: "searock" },
+            { name: "Clam", sell_price: 5, img: "clam" },
+            { name: "Kelp", sell_price: 5, img: "kelp" },
+            { name: "Log", sell_price: 5, img: "log" },
+            { name: "Anchovy", sell_price: 20, img: "anchovy" },
+            { name: "Sardine", sell_price: 20, img: "sardine" },
+            { name: "Shad", sell_price: 20, img: "shad" },
+            { name: "Salmon", sell_price: 45, img: "salmon" },
+            { name: "Carp", sell_price: 45, img: "carp" },
+            { name: "Catfish", sell_price: 45, img: "catfish" },
+            { name: "Tuna", sell_price: 45, img: "tuna" },
+            { name: "Octopus", sell_price: 75, img: "octopus" },
+            { name: "Sea Cucumber", sell_price: 75, img: "seacucumber" },
+            { name: "Squid", sell_price: 75, img: "squid" },
+            { name: "Sturgeon", sell_price: 100, img: "sturgeon" },
+            { name: "Rainbowtrout", sell_price: 100, img: "rainbowtrout" },
+            { name: "Super Cucumber", sell_price: 100, img: "supercucumber" },
+            { name: "Puffer Fish", sell_price: 100, img: "pufferfish" },
+            { name: "Legend", sell_price: 1000, img: "Legend" },
+            { name: "Crimson Fish", sell_price: 1000, img: "crimsonfish" },
+            { name: "Angler", sell_price: 1000, img: "angler" },
           ]
         }
     }
