@@ -13,7 +13,7 @@ class FishingRod {
         this.durability = 100;
     }
 
-    use(char) {
+    use(char, broadcast) {
         if (this.durability >= 10) {
             if (char.holding.includes("")){ 
                 this.durability -= 10;
@@ -33,13 +33,13 @@ class FishingRod {
                     caught = this.fishes5[Math.floor(Math.random()*this.fishes5.length)]
                 }
                 
-                alert(`(${roll}), you caught a ${caught}!`)
+                broadcast(`(${roll}), you caught a ${caught}!`)
                 char.additem(caught)
             } else {
-                alert("Inventory is full")
+                broadcast("Inventory is full")
             }
         }else {
-            alert("Fishing Rod is broken")
+            broadcast("Fishing Rod is broken")
         }
     }
 }

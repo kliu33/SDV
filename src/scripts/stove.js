@@ -29,7 +29,7 @@ class Stove {
         }
     }
     
-    additem(char, item) {
+    additem(char, item, broadcast) {
         if (Object.keys(this.veggie_values).includes(item)) {
             if (this.veggie === "") {
                 char.dropitem();
@@ -37,7 +37,7 @@ class Stove {
                 this.cooking = true;
                 return true;
             } else {
-                alert(`There is already a ${this.veggie} cooking`)
+                broadcast(`There is already a ${this.veggie} cooking`)
                 return false;
             }
         } else if (Object.keys(this.fish_values).includes(item)) {
@@ -47,26 +47,26 @@ class Stove {
                 this.cooking = true;
                 return true;
             } else {
-                alert(`There is already a ${this.fish} cooking`)
+                broadcast(`There is already a ${this.fish} cooking`)
                 return false;
             }
         } else {
-            alert("Cant cook this item")
+            broadcast("Cant cook this item")
             return false;
         }
     }
 
-    eat(char) {
+    eat(char, broadcast) {
         if (this.veggie != "" && this.fish != "") {
             let value = this.fish_values[this.fish] + this.veggie_values[this.veggie]
-            alert(`Ate a ${this.veggie}/${this.fish} soup for ${value} value`)
+            broadcast(`Ate a ${this.veggie}/${this.fish} soup for ${value} value`)
             char.eat_something(value);
             this.cooking = false;
             this.veggie = "";
             this.fish = "";
             return true;
         } else {
-            alert(`Please add ${this.veggie != "" ? "" : "veggie"} ${this.fish != "" ? "" : "fish"}`)
+            broadcast(`Please add ${this.veggie != "" ? "" : "veggie"} ${this.fish != "" ? "" : "fish"}`)
             return false;
         }
     }

@@ -30,13 +30,13 @@ class Char {
       }
     }
 
-    additem(item) {
+    additem(item, broadcast) {
       if (this.holding.includes(item)) {
         if (this.holding_amount[this.holding.indexOf(item)] < 9) {
           this.holding_amount[this.holding.indexOf(item)] += 1;
           return true
         } else {
-          alert("Cant hold anymore of this item")
+          broadcast("Cant hold anymore of this item!")
           return false
         }
       } else if (this.holding.includes("")) {
@@ -45,7 +45,7 @@ class Char {
         this.holding_amount[index9] += 1;
         return true
       } else {
-        alert("Inventory is full")
+        broadcast("Inventory is full!")
         return false
       }
     }

@@ -35,15 +35,14 @@ class Chest {
             this.contents_amount[index10] += 1;
             return true
         } else {
-        alert("Chest is full")
         return false
         }
     }
 
 
-    takeitem(char){
+    takeitem(char, broadcast){
         if (this.contents[this.selection] != "") {
-            if (char.additem(this.contents[this.selection])) {
+            if (char.additem(this.contents[this.selection], broadcast)) {
                 this.contents_amount[this.selection] -= 1;
                 if (this.contents_amount[this.selection] === 0) {
                     this.contents[this.selection] = ""

@@ -132,14 +132,14 @@ class Shop {
       this.selection = 0;
     }
 
-    sell(char, item) {
+    sell(char, item, broadcast) {
       Object.keys(this.items).forEach(cat => {
         this.items[cat].forEach(obj => {
           if (obj.img === item) {
             char.money += obj.sell_price
             char.dropitem()
-            alert(`Sold ${obj.name} for $${obj.sell_price}`)
-            return true;
+            broadcast(`Sold ${obj.name} for $${obj.sell_price}`)
+            return obj;
           }
         })
       })

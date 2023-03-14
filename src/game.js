@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
   let broadcast_message = ""
   let broadcasting = false;
   let message_timeout;
+  let message_interval;
 
   function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
@@ -26,16 +27,17 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function broadcast(message) {
     broadcasting = true;
+    clearInterval(message_interval)
+    clearTimeout(message_timeout);
     broadcast_message = ""
     let letters = message.split("");
     let i = 0;
-    setInterval(function() {
+    message_interval = setInterval(function() {
       if (letters[i]) {
         broadcast_message += letters[i]
       }
       i+=1;
-    }, Math.floor(1500/(letters.length)))
-    clearTimeout(message_timeout);
+    }, Math.floor(1200/(letters.length)))
     message_timeout = setTimeout(function() {broadcasting = false, broadcast_message = ""}, 2200);
   }
 
@@ -100,7 +102,7 @@ document.addEventListener("DOMContentLoaded", function () {
       }
       if (e.keyCode == 32) {
         e.preventDefault();
-        currentchest.takeitem(char)
+        currentchest.takeitem(char, broadcast)
       }
     } else if (inshop) {
         if (e.keyCode == 27) {
@@ -153,12 +155,12 @@ document.addEventListener("DOMContentLoaded", function () {
                 if (char.holding.includes(item.img) && one_of.includes(item.img)) {
                   broadcast("Can only have one of this item!")
                 } else {
-                  if (char.additem(item.img)) {
+                  if (char.additem(item.img, broadcast)) {
                     char.money-=price;
                   }
                 }
               }  else {
-              broadcast("Not enough money")
+              broadcast("Not enough money!")
             }
           }
           
@@ -192,18 +194,22 @@ document.addEventListener("DOMContentLoaded", function () {
           can_place = (stage.map[idx] === 0 && stage.placeable.includes(stage.floor[idx]));
         } 
         if (block_in_house && stage.house_map[idx] instanceof Stove && char.in_hand() != ""){ 
-          stage.house_map[idx].additem(char, char.in_hand())
+          stage.house_map[idx].additem(char, char.in_hand(), broadcast)
         } else if (!block_in_house && stage.map[idx] instanceof Stove && char.in_hand() != "") {
-          stage.map[idx].additem(char, char.in_hand())
+          stage.map[idx].additem(char, char.in_hand(), broadcast)
         } else if (block_in_house && stage.house_map[idx] instanceof Chest && char.in_hand() != ""){ 
-          stage.house_map[idx].additem(char, char.in_hand())
+          if (!stage.house_map[idx].additem(char, char.in_hand())) {
+            broadcast("Chest is full")
+          }
         } else if (!block_in_house && stage.map[idx] instanceof Chest && char.in_hand() != "") {
-          stage.map[idx].additem(char, char.in_hand())
+          if (!stage.map[idx].additem(char, char.in_hand())){
+            broadcast("Chest is full")
+          }
         } else if(stage.map[idx] === 30) {
           if(char.in_hand() == ""){
             inshop = true;
           } else {
-            shop.sell(char, char.in_hand());
+            shop.sell(char, char.in_hand(), broadcast);
           } 
         } else if (stage.house_map[idx] === 51 && char.in_hand() === "") {
           broadcast(`${stage.fun_facts[Math.floor(Math.random()*stage.fun_facts.length)]}`)
@@ -220,17 +226,19 @@ document.addEventListener("DOMContentLoaded", function () {
           case "":
             if (stage.map[idx] instanceof Seed) {
               if (stage.map[idx].stage === 7) {
-                char.additem(stage.map[idx].type.concat(stage.map[idx].stage))
+                char.additem(stage.map[idx].type.concat(stage.map[idx].stage), broadcast)
                 stage.map[idx] = 0;
+              } else {
+                broadcast("Not yet ready to harvest!")
               }
             } else if (stage.map[idx] instanceof Chest){
               currentchest = stage.map[idx]
             } else if (stage.house_map[idx] instanceof Chest) {
               currentchest = stage.house_map[idx]
             } else if (stage.map[idx] instanceof Stove){
-              stage.map[idx].eat(char)
+              stage.map[idx].eat(char, broadcast)
             } else if (stage.house_map[idx] instanceof Stove) {
-              stage.house_map[idx].eat(char)
+              stage.house_map[idx].eat(char, broadcast)
             }
             break;
           case "rock":
@@ -263,12 +271,12 @@ document.addEventListener("DOMContentLoaded", function () {
           case "pickaxe":
             if (block_in_house) {
               if (stage.mineable.includes(stage.house_map[idx])) {
-                char.additem(getKeyByValue(stage.dict,stage.house_map[idx]))
+                char.additem(getKeyByValue(stage.dict,stage.house_map[idx]), broadcast)
                 stage.house_map[idx] = 0;
               }
             } else {
               if (stage.mineable.includes(stage.map[idx])) {
-                char.additem(getKeyByValue(stage.dict,stage.map[idx]))
+                char.additem(getKeyByValue(stage.dict,stage.map[idx]), broadcast)
                 stage.map[idx] = 0;
               } 
             }
@@ -277,6 +285,8 @@ document.addEventListener("DOMContentLoaded", function () {
             if (stage.map[idx] instanceof Seed) {
               if (global_bucket.use()) {
                 stage.map[idx].water();
+              } else {
+                broadcast("Bucket is empty")
               }
             } else if (stage.floor[idx] == 6){ 
               global_bucket.fill();
@@ -284,7 +294,7 @@ document.addEventListener("DOMContentLoaded", function () {
             break;
           case "fishing_rod":
             if (stage.floor[idx] === 6) {
-              global_rod.use(char);
+              global_rod.use(char, broadcast);
             } else {
               broadcast("Cannot fish here")
             }

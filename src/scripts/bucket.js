@@ -14,7 +14,6 @@ class Bucket {
             this.level -= 10;
             return true;
         } else {
-            alert("Bucket is empty")
             return false;
         }
     }
