@@ -6,12 +6,15 @@ document.addEventListener("DOMContentLoaded", function () {
 
   const char = new Char(419,277); //STARTING LOCATION FOR CHARACTER
   const stage = new Map();
-  const shop = new Shop(char);
+  const shop = new Shop();
   const global_bucket = new Bucket();
   const global_rod = new FishingRod();
 
   let currentchest;
   let inshop = false;
+  let broadcast_message = ""
+  let broadcasting = false;
+  let message_timeout;
 
   function getKeyByValue(object, value) {
     return Object.keys(object).find(key => object[key] === value);
@@ -19,6 +22,21 @@ document.addEventListener("DOMContentLoaded", function () {
   
   function inhouse (x,y) {
     return x > 270 && y < 270
+  }
+
+  function broadcast(message) {
+    broadcasting = true;
+    broadcast_message = ""
+    let letters = message.split("");
+    let i = 0;
+    setInterval(function() {
+      if (letters[i]) {
+        broadcast_message += letters[i]
+      }
+      i+=1;
+    }, Math.floor(1500/(letters.length)))
+    clearTimeout(message_timeout);
+    message_timeout = setTimeout(function() {broadcasting = false, broadcast_message = ""}, 2200);
   }
 
   const updateAll = () => {
@@ -37,11 +55,15 @@ document.addEventListener("DOMContentLoaded", function () {
       if (inshop) {
         shop.print_shop(ctx)
       }
+      if (broadcasting){
+        printbroadcast();
+      }
       window.requestAnimationFrame(updateAll);
     } else {
       printover();
     }
   };
+
 
   window.onload = () => {
     window.requestAnimationFrame(updateAll);
@@ -82,43 +104,64 @@ document.addEventListener("DOMContentLoaded", function () {
       }
     } else if (inshop) {
         if (e.keyCode == 27) {
+          shop.current_page = "Main"
           inshop = false;
         }
         if (e.keyCode == 87) {
-          if (shop.selection != 0 && shop.selection != 7) {
-            shop.selection -= 1
+          if (shop.current_page === "Main") {
+            if (shop.page_select != 0) {
+              shop.page_select -= 1;
+            }
+          } else {
+            if (shop.selection - 1 >= 0) {
+              shop.selection -= 1;
+            }
           }
         }
         if (e.keyCode == 83) {
-          if (shop.selection != shop.items.length - 1 && shop.selection != 6) {
+          if (shop.current_page === "Main") {
+            if (shop.page_select != 2) {
+              shop.page_select += 1;
+            }
+          } else {
+            if (shop.selection + 1 < shop.display.length) {
             shop.selection += 1
+            }
           }
         }
         if (e.keyCode == 68) {
-          if (shop.selection < 7) {
+          if (shop.selection + 7 < shop.display.length) {
             shop.selection += 7
           }
         }
         if (e.keyCode == 65) {
-          if (shop.selection >= 7) {
+          if (shop.selection - 7 >= 0) {
             shop.selection -= 7
           }
         }
+        if (e.keyCode == 8) {
+          shop.current_page = "Main"
+        }
         if (e.keyCode == 32) {
           e.preventDefault();
-          let item = shop.items[shop.selection]
-          let price = shop.items_buy_price[item];
-          if (char.money >= price) {
-              if (char.holding.includes(item) && one_of.includes(item)) {
-                alert("Can only have one of this item!")
-              } else {
-                if (char.additem(item)) {
-                  char.money-=price;
+          if (shop.current_page === "Main") {
+            shop.set_page();
+          } else {
+            let item = shop.display[shop.selection]
+            let price = item.buy_price;
+            if (char.money >= price) {
+                if (char.holding.includes(item.img) && one_of.includes(item.img)) {
+                  broadcast("Can only have one of this item!")
+                } else {
+                  if (char.additem(item.img)) {
+                    char.money-=price;
+                  }
                 }
-              }
-            }  else {
-            alert("Not enough money")
+              }  else {
+              broadcast("Not enough money")
+            }
           }
+          
         }
       } else {
       if (e.keyCode == 68) {
@@ -159,23 +202,19 @@ document.addEventListener("DOMContentLoaded", function () {
         } else if(stage.map[idx] === 30) {
           if(char.in_hand() == ""){
             inshop = true;
-          } else if (char.in_hand() in shop.items_sell_price) {
-            let price2 = shop.items_sell_price[char.in_hand()];
-            char.money += price2;
-            char.dropitem();
           } else {
-            alert("Can't sell this item")
-          }
+            shop.sell(char, char.in_hand());
+          } 
         } else if (stage.house_map[idx] === 51 && char.in_hand() === "") {
-          alert(`${stage.fun_facts[Math.floor(Math.random()*stage.fun_facts.length)]}`)
+          broadcast(`${stage.fun_facts[Math.floor(Math.random()*stage.fun_facts.length)]}`)
         } else if (stage.house_map[idx] === 53 && char.in_hand() === "") {
-          alert(`Get out of there Chak...`)
+          broadcast(`Get out of there Chak...`)
         }else if (stage.map[idx] === 55 && char.in_hand() === "") {
-          alert(`Ow`)
+          broadcast(`Ow`)
         }else if (stage.house_map[idx] === 52 && char.in_hand() === "") {
-          alert(`Zzz.... (this has no functionality)`)
+          broadcast(`Zzz.... (this has no functionality)`)
         }else if (!can_place && stage.placeable.includes(stage.dict[char.in_hand()])) {
-          alert("Can't place here")
+          broadcast("Can't place here")
         } else {
         switch(char.in_hand()){
           case "":
@@ -247,7 +286,7 @@ document.addEventListener("DOMContentLoaded", function () {
             if (stage.floor[idx] === 6) {
               global_rod.use(char);
             } else {
-              alert("Cannot fish here")
+              broadcast("Cannot fish here")
             }
             break;
           case "chest":
@@ -282,10 +321,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 char.dropitem();
                 stage.house_map[idx] = 51;
               } else {
-                alert("Cant place here")
+                broadcast("Cant place here")
               }
             } else {
-              alert("Can only place in house")
+              broadcast("Can only place in house")
             }
             break;
           case "bed":
@@ -294,10 +333,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 char.dropitem();
                 stage.house_map[idx] = 52;
               } else {
-                alert("Cant place here")
+                broadcast("Cant place here")
               }
             } else {
-              alert("Can only place in house")
+              broadcast("Can only place in house")
             }
             break;
           case "closet":
@@ -306,10 +345,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 char.dropitem();
                 stage.house_map[idx] = 53;
               } else {
-                alert("Cant place here")
+                broadcast("Cant place here")
               }
             } else {
-              alert("Can only place in house")
+              broadcast("Can only place in house")
             }
             break;
           case "table":
@@ -318,10 +357,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 char.dropitem();
                 stage.house_map[idx] = 54;
               } else {
-                alert("Cant place here")
+                broadcast("Cant place here")
               }
             } else {
-              alert("Can only place in house")
+              broadcast("Can only place in house")
             }
             break;
           case "cactus":
@@ -330,10 +369,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 char.dropitem();
                 stage.map[idx] = 55;
               } else {
-                alert("Cant place here")
+                broadcast("Cant place here")
               }
             } else {
-              alert("Can only place on sand")
+              broadcast("Can only place on sand")
             }
             break;
           case "roses":
@@ -342,10 +381,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 char.dropitem();
                 stage.map[idx] = 56;
               } else {
-                alert("Cant place here")
+                broadcast("Cant place here")
               }
             } else {
-              alert("Can only place on grass")
+              broadcast("Can only place on grass")
             }
             break;
           case "violets":
@@ -354,10 +393,10 @@ document.addEventListener("DOMContentLoaded", function () {
                 char.dropitem();
                 stage.map[idx] = 57;
               } else {
-                alert("Cant place here")
+                broadcast("Cant place here")
               }
             } else {
-              alert("Can only place on grass")
+              broadcast("Can only place on grass")
             }
             break;
           }
@@ -626,6 +665,13 @@ document.addEventListener("DOMContentLoaded", function () {
     ctx.font = "bold 30px serif";
     ctx.fillStyle = "black";
     ctx.fillText(`${stage.hours}:${stage.minutes < 10 ? `0${stage.minutes}` : stage.minutes}`, stage.pixel_size * (char.holding.length+3.5), canvas.width + (stage.pixel_size)/1.5);
+  }
+
+  const printbroadcast = () => {
+    ctx.font = "normal 20px fantasy";
+    ctx.fillStyle = "#bfbfbf";
+    ctx.drawImage(broadcast_back, 0, 450, canvas.width,150)
+    ctx.fillText(broadcast_message, 35, 520);
   }
 
   const printnextblock = () => {

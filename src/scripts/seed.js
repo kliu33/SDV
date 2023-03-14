@@ -5,7 +5,7 @@ class Seed {
         this.water_level = 100;
         this.life = true;
         setInterval(this.growUp.bind(this), 2000);
-        setInterval(this.wither.bind(this), 5000);
+        setInterval(this.wither.bind(this), 200);
     }
 
     growUp() {
