@@ -1,82 +1,148 @@
 class Shop {
-    constructor(char) {
-        this.fish_price = [5, 20, 30, 50, 75, 100, 1000]
-        this.char = char
-        this.items = ["grunk1", "root1", "pickaxe","bucket", "fishing_rod", "chest", "stove", "closet","shelf","table","bed", "cactus","roses","violets"]
-        this.item_names = ["Grunk", "Root", "Pickaxe", "Bucket", "Fishing Rod", "Chest", "Stove", "Closet", "Shelf", "Table","Bed","Cactus", "Roses", "Violets"]
-        this.items_buy_price = {
-            "grunk1" : 30,
-            "root1": 40,
-            "pickaxe" : 50,
-            "rock" : 10,
-            "bucket" : 100,
-            "fishing_rod": 200,
-            "chest": 350,
-            "stove": 500,
-            "bed": 180,
-            "closet": 190,
-            "shelf": 210,
-            "table": 150,
-            "cactus": 100,
-            "roses": 200,
-            "violets": 200
-        }
-        this.items_sell_price = {
-          "grunk1" : 15,
-          "root1": 20,
-          "pickaxe" : 25,
-          "rock" : 5,
-          "grunk7" : 70,
-          "root7" : 100,
-          "bucket" : 50,
-          "fishing_rod": 200,
-          "stove": 250,
-          "bed": 90,
-          "closet": 95,
-          "shelf": 105,
-          "cactus": 50,
-          "table": 75,
-          "roses": 100,
-          "violets": 100,
-          "searock": this.fish_price[0],
-          "clam": this.fish_price[0],
-          "kelp": this.fish_price[0],
-          "log": this.fish_price[0],
-          "anchovy": this.fish_price[1],
-          "sardine": this.fish_price[1],
-          "shad": this.fish_price[1],
-          "salmon": this.fish_price[2],
-          "carp": this.fish_price[2],
-          "catfish": this.fish_price[2],
-          "tuna": this.fish_price[4],
-          "octopus": this.fish_price[4],
-          "seacucumber": this.fish_price[4],
-          "squid": this.fish_price[4],
-          "sturgeon": this.fish_price[5],
-          "rainbowtrout": this.fish_price[5],
-          "supercucumber": this.fish_price[5],
-          "pufferfish": this.fish_price[5],
-          "legend": this.fish_price[6],
-          "crimsonfish": this.fish_price[6],
-          "angler": this.fish_price[6],
-          "chest": 175
-        }
+    constructor() {
+        this.pages = ["Seeds", "Tools", "Decorations"]
+        this.current_page = "Main"
+        this.page_select = 0;
         this.selection = 0;
+        this.display = {}
+        this.items = {
+          "Seeds": [{
+            name: "Grunk",
+            buy_price: 30,
+            sell_price: 15,
+            img: "grunk1"
+          },
+          {
+            name: "Root",
+            buy_price: 40,
+            sell_price: 20,
+            img: "root1"
+          }],
+          "Tools": [
+            {
+              name: "Pickaxe",
+              buy_price: 200,
+              sell_price: 100,
+              img: "pickaxe" 
+            },
+            {
+              name: "Fishing Rod",
+              buy_price: 250,
+              sell_price: 125,
+              img: "fishing_rod" 
+            },
+            {
+              name: "Bucket",
+              buy_price: 200,
+              sell_price: 100,
+              img: "bucket"
+            }
+          ],
+          "Decorations": [
+            {
+              name: "Chest",
+              buy_price: 350,
+              sell_price: 175,
+              img: "chest",
+            },
+            {
+              name: "Stove",
+              buy_price: 500,
+              sell_price: 250,
+              img: "stove",
+            },
+            {
+              name: "Closet",
+              buy_price: 190,
+              sell_price: 95,
+              img: "closet",
+            },
+            {
+              name: "Shelf",
+              buy_price: 210,
+              sell_price: 105,
+              img: "shelf",
+            },
+            {
+              name: "Table",
+              buy_price: 150,
+              sell_price: 75,
+              img: "table",
+            },
+            {
+              name: "Bed",
+              buy_price: 180,
+              sell_price: 90,
+              img: "bed",
+            },
+            {
+              name: "Cactus",
+              buy_price: 100,
+              sell_price: 50,
+              img: "cactus",
+            },
+            {
+              name: "Roses",
+              buy_price: 200,
+              sell_price: 100,
+              img: "roses",
+            },
+            {
+              name: "Violets",
+              buy_price: 200,
+              sell_price: 100,
+              img: "violets",
+            }
+          ]
+        }
     }
 
     print_shop(ctx) {
         ctx.drawImage(shop_items, 0, 0, 600,600)
-        for (let i = 0; i < this.items.length; i++){
-          if (i === this.selection) {
-            ctx.drawImage(inv_slot, i <= 6 ? tWidth*2 : tWidth*5.5, i <= 6 ? tWidth * (i+1.5) : tWidth * ((i+1.5)-7), tWidth/2,tWidth/2)
-          } else {
-            ctx.drawImage(unselected_inv, i <= 6 ? tWidth*2 : tWidth*5.5,  i <= 6 ? tWidth * (i+1.5) : tWidth * ((i+1.5)-7), tWidth/2,tWidth/2)
+        if (this.current_page === "Main") {
+          for (let i = 0; i < this.pages.length; i++) {
+            ctx.font = "normal 40px fantasy";
+            if (i === this.page_select) {
+              ctx.fillStyle = "Green"
+            } else {
+              ctx.fillStyle = "black";
+            }
+            ctx.fillText(`${this.pages[i]}`, tWidth*3, (tWidth * (i+3)));
           }
-        ctx.drawImage(eval(this.items[i]), i <= 6 ? tWidth*2.1 : tWidth*5.6, i <= 6 ? tWidth * (i+1.6) : tWidth * ((i+1.6)-7), tWidth/3,tWidth/3)
-        ctx.font = "normal 18px fantasy";
-        ctx.fillStyle = "black";
-        ctx.fillText(`$${this.items_buy_price[this.items[i]]}`, i <= 6 ? tWidth*3 : tWidth*6.5, i <= 6 ? (tWidth * (i+2)) : (tWidth * ((i+2)-7)));
-        ctx.fillText(`${this.item_names[i]}`, i <= 6 ? tWidth*4 : tWidth*7.5, i <= 6 ? (tWidth * (i+2)) : (tWidth * ((i+2)-7)));
         }
+        else {
+          for (let i = 0; i < this.display.length; i++){
+            if (i === this.selection) {
+              ctx.drawImage(inv_slot, i <= 6 ? tWidth*2 : tWidth*5.5, i <= 6 ? tWidth * (i+1.5) : tWidth * ((i+1.5)-7), tWidth/2,tWidth/2)
+            } else {
+              ctx.drawImage(unselected_inv, i <= 6 ? tWidth*2 : tWidth*5.5,  i <= 6 ? tWidth * (i+1.5) : tWidth * ((i+1.5)-7), tWidth/2,tWidth/2)
+            }
+          ctx.drawImage(eval(this.display[i].img), i <= 6 ? tWidth*2.1 : tWidth*5.6, i <= 6 ? tWidth * (i+1.6) : tWidth * ((i+1.6)-7), tWidth/3,tWidth/3)
+          ctx.font = "normal 18px fantasy";
+          ctx.fillStyle = "black";
+          ctx.fillText(`$${this.display[i].buy_price}`, i <= 6 ? tWidth*3 : tWidth*6.5, i <= 6 ? (tWidth * (i+2)) : (tWidth * ((i+2)-7)));
+          ctx.fillText(`${this.display[i].name}`, i <= 6 ? tWidth*4 : tWidth*7.5, i <= 6 ? (tWidth * (i+2)) : (tWidth * ((i+2)-7)));
+          }
+        }
+    }
+
+    set_page(){
+      this.current_page = this.pages[this.page_select];
+      this.display = this.items[this.current_page];
+      this.selection = 0;
+    }
+
+    sell(char, item) {
+      Object.keys(this.items).forEach(cat => {
+        this.items[cat].forEach(obj => {
+          if (obj.img === item) {
+            char.money += obj.sell_price
+            char.dropitem()
+            alert(`Sold ${obj.name} for $${obj.sell_price}`)
+            return true;
+          }
+        })
+      })
+      return false;
     }
 }
