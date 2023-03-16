@@ -122,7 +122,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
         if (e.keyCode == 83) {
           if (shop.current_page === "Main") {
-            if (shop.page_select != 2) {
+            if (shop.page_select != shop.pages.length - 1) {
               shop.page_select += 1;
             }
           } else {
@@ -151,7 +151,15 @@ document.addEventListener("DOMContentLoaded", function () {
           } else {
             let item = shop.display[shop.selection]
             let price = item.buy_price;
-            if (char.money >= price) {
+            if (item.img === "fishing_rod" && char.holding.includes(item.img)){
+              if (char.money > ((100 - global_rod.durability) * 2)) {
+                broadcast(`Fishing Rod repaired for $${(100 - global_rod.durability) * 2}`)
+                global_rod.repair((100 - global_rod.durability) * 2)
+              } else {
+                broadcast(`Fishing Rod repaired for $${char.money}`)
+                global_rod.repair(Math.floor(char.money / 2))
+              }
+            } else if (char.money >= price) {
                 if (char.holding.includes(item.img) && one_of.includes(item.img)) {
                   broadcast("Can only have one of this item!")
                 } else {

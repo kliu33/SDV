@@ -136,8 +136,7 @@ class Shop {
             }
             ctx.fillText(`${this.pages[i]}`, tWidth*3, (tWidth * (i+3)));
           }
-        }
-        else {
+        }else {
           for (let i = 0; i < this.display.length; i++){
             if (i === this.selection) {
               ctx.drawImage(inv_slot, i <= 6 ? tWidth*2 : tWidth*5.5, i <= 6 ? tWidth * (i+1.5) : tWidth * ((i+1.5)-7), tWidth/2,tWidth/2)
