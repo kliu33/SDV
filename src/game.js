@@ -197,11 +197,11 @@ document.addEventListener("DOMContentLoaded", function () {
           stage.house_map[idx].additem(char, char.in_hand(), broadcast)
         } else if (!block_in_house && stage.map[idx] instanceof Stove && char.in_hand() != "") {
           stage.map[idx].additem(char, char.in_hand(), broadcast)
-        } else if (block_in_house && stage.house_map[idx] instanceof Chest && char.in_hand() != ""){ 
+        } else if (block_in_house && stage.house_map[idx] instanceof Chest && (char.in_hand() != "" && char.in_hand() != "pickaxe")){ 
           if (!stage.house_map[idx].additem(char, char.in_hand())) {
             broadcast("Chest is full")
           }
-        } else if (!block_in_house && stage.map[idx] instanceof Chest && char.in_hand() != "") {
+        } else if (!block_in_house && stage.map[idx] instanceof Chest && (char.in_hand() != "" && char.in_hand() != "pickaxe")) {
           if (!stage.map[idx].additem(char, char.in_hand())){
             broadcast("Chest is full")
           }
@@ -257,11 +257,27 @@ document.addEventListener("DOMContentLoaded", function () {
             break;
           case "pickaxe":
             if (block_in_house) {
+              if (stage.house_map[idx] instanceof Chest) {
+                char.additem("chest");
+                stage.house_map[idx] = 0;
+              }
+              if (stage.house_map[idx] instanceof Stove) {
+                char.additem("stove");
+                stage.house_map[idx] = 0;
+              }
               if (stage.mineable.includes(stage.house_map[idx])) {
                 char.additem(getKeyByValue(stage.dict,stage.house_map[idx]), broadcast)
                 stage.house_map[idx] = 0;
               }
             } else {
+              if (stage.map[idx] instanceof Chest) {
+                char.additem("chest");
+                stage.map[idx] = 0;
+              }
+              if (stage.map[idx] instanceof Stove) {
+                char.additem("stove");
+                stage.map[idx] = 0;
+              }
               if (stage.mineable.includes(stage.map[idx])) {
                 char.additem(getKeyByValue(stage.dict,stage.map[idx]), broadcast)
                 stage.map[idx] = 0;
