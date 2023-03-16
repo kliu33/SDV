@@ -1,7 +1,7 @@
 class Map {
     constructor() {
-        this.walkable = [0, 4, 9,27,56,57];
-        this.mineable = [50,51,52,53,54,55,56,57];
+        this.walkable = [0, 4, 7, 9,27,56,57];
+        this.mineable = [51,52,53,54,55,56,57];
         this.placeable = [0, 4, 5, 1, 50];
         this.pixel_size = 60;
         this.rows = 10;
@@ -41,7 +41,7 @@ class Map {
             0,0,0,0,0,0,0,0,0,0,
             0,0,0,0,0,0,0,0,0,0,
             4,4,4,4,4,4,4,4,4,4,
-            5,5,5,5,5,5,5,5,5,5,
+            7,7,7,7,7,7,7,7,7,7,
             6,6,6,6,6,6,6,6,6,6
           ];
         this.house_floor = [
