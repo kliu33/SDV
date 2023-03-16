@@ -49,7 +49,8 @@ document.addEventListener("DOMContentLoaded", function () {
       printlayer1();
       printlayer2();
       char.printchar(ctx);
-      printbar()
+      printbar();
+      printhue();
       if (currentchest instanceof Chest){
         currentchest.openchest(char, ctx)
       }
@@ -226,7 +227,15 @@ document.addEventListener("DOMContentLoaded", function () {
         }else if (stage.map[idx] === 55 && char.in_hand() === "") {
           broadcast(`Ow`)
         }else if (stage.house_map[idx] === 52 && char.in_hand() === "") {
-          broadcast(`Zzz.... (this has no functionality)`)
+          if (stage.hours >= 19 || stage.hours <= 4) {
+            broadcast(`You slept for ${Math.abs(stage.hours - 8)} hours.`)
+            stage.hours = 8
+            char.x = 419;
+            char.y = 277;
+            char.facing = "down"
+          } else {
+            broadcast(`It's too early to sleep!`)
+          }
         }else if (!can_place && stage.placeable.includes(stage.dict[char.in_hand()])) {
           broadcast("Can't place here")
         } else {
@@ -706,6 +715,22 @@ document.addEventListener("DOMContentLoaded", function () {
         ctx.globalAlpha = 1.0;
       }
     }
+  }
+  
+  const printhue = () => {
+    const totalMinutes = stage.hours * 60 + stage.minutes;
+    let alpha;
+      if (totalMinutes >= 720 && totalMinutes <= 960) {
+        alpha = 0;
+      } else {
+        alpha = totalMinutes <= 720 ? 1 - (totalMinutes / 720) : (totalMinutes - 960) / 720;
+      }
+    if (!inhouse(char.x,char.y)) {
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle = "black";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
+    ctx.globalAlpha = 1;
   }
 
   const printover = () => {

@@ -6,7 +6,7 @@ class Map {
         this.pixel_size = 60;
         this.rows = 10;
         this.cols = 10;
-        this.hours = 7;
+        this.hours = 8;
         this.minutes = 0;
         this.fun_facts = ["The first computer “bug” was an actual real-life bug",
         "The name Oak was intended to be used for the popular Java that we commonly use now, but it was already used and copyrighted",
