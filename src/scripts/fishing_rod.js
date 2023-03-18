@@ -55,13 +55,13 @@ class FishingRod {
                     this.start_cd();
                     char.additem(caught)
                 } else {
-                    broadcast("Inventory is full")
+                    broadcast("Inventory is full.")
                 }
             } else {
-                broadcast(`You must wait ${this.cooldown} seconds before fishing again!`)
+                broadcast(`You must wait ${this.cooldown} seconds before fishing again.`)
             }
         }else {
-            broadcast("Fishing Rod is broken")
+            broadcast("Fishing Rod is broken.")
         }
     }
 }
