@@ -73,6 +73,7 @@ These four arrays are how the game keeps track of how the map looks and function
 ## Images/Music
 
 Game tiles by Windies (https://forums.rpgmakerweb.com/index.php?threads/grass-tilesets-the-new-era.64531/)
+
 Character sprites by DevilsAdvocate (https://forums.rpgmakerweb.com/index.php?threads/diagonal-mv-sprites-chibi-tall-tall-template.74151/)
 
 Music: Wondering by Purrple Cat | https://purrplecat.com/ 
