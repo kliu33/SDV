@@ -28,8 +28,10 @@
     </header>
     <div class="container">
         <div class="sides">
-            <audio id="lofi" src="./music/Wondering.mp3" loop autoplay muted></audio>
+            <audio id="lofi" src="./music/Wondering.mp3" loop muted></audio>
             <img id="audio" src="./images/vol-off.png" onclick="changeImage()">
+            <br>
+            <input type="range" min="0" max="1" step="0.01" value="1" oninput="changeVolume(this.value)">
             <h1>Controls</h1>
             <p> Movement: WASD </p>
             <p> Action: Spacebar </p>
