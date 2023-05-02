@@ -263,6 +263,8 @@ document.addEventListener("DOMContentLoaded", function () {
               char.dropitem(); 
               let g = new Seed("grunk");
               stage.map[idx] = g;
+            } else {
+              broadcast(`Can only be planted on soil`)
             }
             break;
           case "root1":
@@ -270,6 +272,8 @@ document.addEventListener("DOMContentLoaded", function () {
               char.dropitem(); 
               let g = new Seed("root");
               stage.map[idx] = g;
+            } else {
+              broadcast(`Can only be planted on soil`)
             }
             break;
           case "pickaxe":
